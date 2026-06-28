@@ -3,13 +3,17 @@ const BOLT = "polygon(58% 0,18% 52%,46% 52%,30% 100%,82% 40%,52% 40%)";
 export default function Hero() {
   return (
     <section id="top" style={{ position: "relative", background: "#FFCE00", overflow: "hidden" }}>
-      {/* 裝飾 — 小螢幕隱藏 */}
+      {/* 漂浮圓裝飾 — 小螢幕隱藏（手機改用下方大閃電） */}
       <div className="lc-hero-decor">
         <div style={{ position: "absolute", width: 240, height: 240, borderRadius: "50%", background: "rgba(255,255,255,.45)", top: -50, right: 160, animation: "lc-floaty 6s ease-in-out infinite" }} />
         <div style={{ position: "absolute", width: 130, height: 130, borderRadius: "50%", background: "rgba(255,255,255,.35)", bottom: 60, left: 60, animation: "lc-floaty2 5s ease-in-out infinite" }} />
         <div style={{ position: "absolute", width: 70, height: 70, borderRadius: "50%", border: "5px solid rgba(26,26,26,.12)", top: 330, right: 90, animation: "lc-floaty 7s ease-in-out infinite" }} />
-        <div style={{ position: "absolute", right: 200, top: 150, width: 300, height: 430, background: "#1A1A1A", clipPath: BOLT, opacity: 0.92, animation: "lc-floaty 6.5s ease-in-out infinite" }} />
-        <div style={{ position: "absolute", right: 160, top: 130, width: 300, height: 430, background: "#fff", clipPath: BOLT, opacity: 0.45 }} />
+      </div>
+
+      {/* 大閃電 — 桌機與手機都顯示（手機版由 CSS 重新定位/縮放） */}
+      <div className="lc-hero-bolts" aria-hidden>
+        <div className="lc-bolt lc-bolt-dark" style={{ position: "absolute", right: 200, top: 150, width: 300, height: 430, background: "#1A1A1A", clipPath: BOLT, opacity: 0.92, animation: "lc-floaty 6.5s ease-in-out infinite" }} />
+        <div className="lc-bolt lc-bolt-light" style={{ position: "absolute", right: 160, top: 130, width: 300, height: 430, background: "#fff", clipPath: BOLT, opacity: 0.45 }} />
       </div>
 
       <div className="lc-hero-pad" style={{ position: "relative", maxWidth: 1200, margin: "0 auto", padding: "120px 32px 130px" }}>
