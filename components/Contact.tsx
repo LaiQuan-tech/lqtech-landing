@@ -21,7 +21,6 @@ export default function Contact() {
           </a>
           <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 6 }}>
             <a href={`mailto:${site.email}`} style={{ display: "flex", alignItems: "center", gap: 12, color: "#ddd", fontSize: 16, textDecoration: "none" }}><span style={{ fontSize: 20 }}>✉️</span> {site.email}</a>
-            <a href={`tel:${site.phone.replace(/[^0-9+]/g, "")}`} style={{ display: "flex", alignItems: "center", gap: 12, color: "#ddd", fontSize: 16, textDecoration: "none" }}><span style={{ fontSize: 20 }}>📞</span> {site.phone}</a>
             <div style={{ display: "flex", alignItems: "center", gap: 12, color: "#ddd", fontSize: 16 }}><span style={{ fontSize: 20 }}>📍</span> {site.address}</div>
           </div>
         </div>

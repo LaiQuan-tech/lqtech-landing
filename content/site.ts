@@ -6,7 +6,7 @@ export const site = {
   lineUrl: process.env.NEXT_PUBLIC_LINE_URL || "https://line.me/R/ti/p/@laichien",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "hello@laichien.tw",
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "02-1234-5678",
-  address: "台北市信義區 · 全台遠端服務",
+  address: "台北市 · 新北市 · 全台遠端服務",
 };
 
 export const navLinks = [
