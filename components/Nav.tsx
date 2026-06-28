@@ -46,23 +46,41 @@ export default function Nav() {
         </a>
 
         <button
-          aria-label="開啟選單"
+          aria-label={open ? "關閉選單" : "開啟選單"}
+          aria-expanded={open}
           className="lc-nav-toggle"
           onClick={() => setOpen((v) => !v)}
           style={{
             alignItems: "center",
             justifyContent: "center",
-            width: 42,
-            height: 42,
+            width: 44,
+            height: 44,
             borderRadius: 12,
-            border: "2px solid #1A1A1A",
-            background: "transparent",
-            color: "#1A1A1A",
-            fontSize: 20,
+            border: "none",
+            background: "#1A1A1A",
             cursor: "pointer",
+            padding: 0,
           }}
         >
-          {open ? "✕" : "☰"}
+          <span style={{ position: "relative", display: "block", width: 22, height: 16 }}>
+            {[0, 1, 2].map((i) => {
+              const base: React.CSSProperties = {
+                position: "absolute",
+                left: 0,
+                width: 22,
+                height: 2.5,
+                borderRadius: 2,
+                background: "#FFCE00",
+                transition: "transform .25s ease, opacity .2s ease, top .25s ease",
+              };
+              const closedTop = [0, 6.75, 13.5][i];
+              if (open) {
+                if (i === 1) return <span key={i} style={{ ...base, top: 6.75, opacity: 0 }} />;
+                return <span key={i} style={{ ...base, top: 6.75, transform: `rotate(${i === 0 ? 45 : -45}deg)` }} />;
+              }
+              return <span key={i} style={{ ...base, top: closedTop }} />;
+            })}
+          </span>
         </button>
 
         <nav
