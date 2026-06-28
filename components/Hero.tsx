@@ -29,10 +29,10 @@ export default function Hero() {
           </p>
           <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
             <a href="#contact" className="lc-btn-dark" style={{ background: "#1A1A1A", color: "#fff", fontWeight: 700, fontSize: 18, padding: "18px 36px", borderRadius: 999, textDecoration: "none" }}>
-              免費聊聊你的專案 →
+              立即諮詢
             </a>
             <a href="#works" className="lc-btn-light" style={{ background: "#fff", color: "#1A1A1A", fontWeight: 700, fontSize: 18, padding: "18px 32px", borderRadius: 999, border: "2px solid #1A1A1A", textDecoration: "none" }}>
-              看作品案例
+              作品案例
             </a>
           </div>
           <div className="lc-stats" style={{ display: "flex", gap: 46, marginTop: 56, flexWrap: "wrap" }}>
