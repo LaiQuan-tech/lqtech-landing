@@ -18,7 +18,7 @@ export default function Services() {
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 {s.points.map((p) => (
                   <div key={p} style={{ display: "flex", alignItems: "center", gap: 9, fontSize: 15, color: "#444", fontWeight: 500 }}>
-                    <span style={{ color: "#1A1A1A", fontWeight: 800 }}>⚡</span>
+                    <span className="lc-spark" style={{ color: "#1A1A1A", fontWeight: 800 }}>⚡</span>
                     {p}
                   </div>
                 ))}

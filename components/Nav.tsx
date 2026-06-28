@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Logo from "./Logo";
+import CurrentLine from "./CurrentLine";
 import { navLinks, site } from "@/content/site";
 
 export default function Nav() {
@@ -118,7 +119,7 @@ export default function Nav() {
           ))}
           <a
             href="#contact"
-            className="lc-nav-cta"
+            className="lc-nav-cta lc-zap"
             onClick={() => setOpen(false)}
             style={{
               background: "#1A1A1A",
@@ -133,6 +134,15 @@ export default function Nav() {
           </a>
         </nav>
       </div>
+
+      {/* 招牌底部電流線：亮光持續由左往右流過 */}
+      <CurrentLine
+        height={3}
+        baseColor="transparent"
+        glow="rgba(255,255,255,.9)"
+        duration={3}
+        style={{ position: "absolute", left: 0, right: 0, bottom: -3, zIndex: 1 }}
+      />
     </header>
   );
 }

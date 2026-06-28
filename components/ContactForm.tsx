@@ -77,7 +77,7 @@ export default function ContactForm() {
     <div className="lc-reveal lc-form-card" style={{ background: "#fff", borderRadius: 28, padding: "38px 36px", boxShadow: "0 20px 60px rgba(0,0,0,.4)" }}>
       {sent ? (
         <div style={{ textAlign: "center", padding: "40px 10px" }}>
-          <div style={{ width: 88, height: 88, margin: "0 auto 24px", borderRadius: "50%", background: "#FFCE00", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 44, animation: "lc-pulse 1.6s ease-in-out infinite" }}>⚡</div>
+          <div style={{ width: 88, height: 88, margin: "0 auto 24px", borderRadius: "50%", background: "#FFCE00", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 44, boxShadow: "0 0 34px rgba(255,206,0,.75)", animation: "lc-pulse 1.6s ease-in-out infinite" }}>⚡</div>
           <h3 style={{ fontFamily: "var(--font-baloo), var(--font-noto), sans-serif", fontWeight: 800, fontSize: 28, color: "#1A1A1A", margin: "0 0 12px" }}>收到囉！</h3>
           <p style={{ fontSize: 16, color: "#777", lineHeight: 1.7, margin: "0 0 26px" }}>
             謝謝你 {sentName}，我們會在一個工作天內回覆你。<br />急件歡迎直接用 LINE 找我們。
@@ -138,7 +138,7 @@ export default function ContactForm() {
               type="button"
               onClick={submit}
               disabled={loading}
-              className="lc-btn-dark"
+              className="lc-zap-charge"
               style={{ background: "#FFCE00", color: "#1A1A1A", fontWeight: 800, fontSize: 18, padding: 16, borderRadius: 14, border: "none", cursor: loading ? "not-allowed" : "pointer", fontFamily: "inherit", marginTop: 4, boxShadow: "0 6px 0 #cca600", opacity: loading ? 0.7 : 1 }}
             >
               {loading ? "送出中⋯" : "送出諮詢 ⚡"}

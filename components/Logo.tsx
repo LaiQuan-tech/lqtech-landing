@@ -26,6 +26,7 @@ export default function Logo({
       }}
     >
       <div
+        className="lc-flicker"
         style={{
           width: size * 0.43,
           height: size * 0.57,

@@ -10,11 +10,25 @@ export default function Hero() {
         <div style={{ position: "absolute", width: 70, height: 70, borderRadius: "50%", border: "5px solid rgba(26,26,26,.12)", top: 330, right: 90, animation: "lc-floaty 7s ease-in-out infinite" }} />
       </div>
 
-      {/* 大閃電 — 桌機與手機都顯示（手機版由 CSS 重新定位/縮放） */}
+      {/* 大閃電 — 桌機與手機都顯示（手機版由 CSS 重新定位/縮放）。發光由 .lc-bolt-* class 提供 */}
       <div className="lc-hero-bolts" aria-hidden>
-        <div className="lc-bolt lc-bolt-dark" style={{ position: "absolute", right: 200, top: 150, width: 300, height: 430, background: "#1A1A1A", clipPath: BOLT, opacity: 0.92, animation: "lc-floaty 6.5s ease-in-out infinite" }} />
+        <div className="lc-bolt lc-bolt-dark" style={{ position: "absolute", right: 200, top: 150, width: 300, height: 430, background: "#1A1A1A", clipPath: BOLT, opacity: 0.92 }} />
         <div className="lc-bolt lc-bolt-light" style={{ position: "absolute", right: 160, top: 130, width: 300, height: 430, background: "#fff", clipPath: BOLT, opacity: 0.45 }} />
       </div>
+
+      {/* 克制版閃電閃光：絕大多數時間全暗，偶爾像遠方打雷亮一下 */}
+      <div
+        className="lc-hero-flash"
+        aria-hidden
+        style={{
+          position: "absolute",
+          inset: 0,
+          pointerEvents: "none",
+          opacity: 0,
+          background: "radial-gradient(120% 90% at 75% 25%, rgba(255,255,255,.9), rgba(255,255,255,0) 60%)",
+          animation: "lc-hero-flash 9s ease-in-out infinite",
+        }}
+      />
 
       <div className="lc-hero-pad" style={{ position: "relative", maxWidth: 1200, margin: "0 auto", padding: "120px 32px 130px" }}>
         <div style={{ maxWidth: 680 }}>
@@ -28,10 +42,10 @@ export default function Hero() {
             萊乾資訊替中小企業到大型團隊，打造會發光的數位產品。<br />從設計到開發一條龍，讓你的生意閃電起步。
           </p>
           <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
-            <a href="#contact" className="lc-btn-dark" style={{ background: "#1A1A1A", color: "#fff", fontWeight: 700, fontSize: 18, padding: "18px 36px", borderRadius: 999, textDecoration: "none" }}>
+            <a href="#contact" className="lc-btn-dark lc-zap" style={{ background: "#1A1A1A", color: "#fff", fontWeight: 700, fontSize: 18, padding: "18px 36px", borderRadius: 999, textDecoration: "none" }}>
               立即諮詢
             </a>
-            <a href="#works" className="lc-btn-light" style={{ background: "#fff", color: "#1A1A1A", fontWeight: 700, fontSize: 18, padding: "18px 32px", borderRadius: 999, border: "2px solid #1A1A1A", textDecoration: "none" }}>
+            <a href="#works" className="lc-btn-light lc-zap" style={{ background: "#fff", color: "#1A1A1A", fontWeight: 700, fontSize: 18, padding: "18px 32px", borderRadius: 999, border: "2px solid #1A1A1A", textDecoration: "none" }}>
               作品案例
             </a>
           </div>
@@ -40,9 +54,9 @@ export default function Hero() {
               { n: "50+", l: "完成專案" },
               { n: "98%", l: "客戶回購率" },
               { n: "6 年", l: "開發經驗" },
-            ].map((s) => (
+            ].map((s, i) => (
               <div key={s.l}>
-                <div className="lc-stat-num" style={{ fontFamily: "var(--font-baloo), sans-serif", fontWeight: 800, fontSize: 38, color: "#1A1A1A" }}>{s.n}</div>
+                <div className="lc-stat-num lc-charge-text" style={{ fontFamily: "var(--font-baloo), sans-serif", fontWeight: 800, fontSize: 38, color: "#1A1A1A", animationDelay: `${i * 0.9}s` }}>{s.n}</div>
                 <div style={{ fontSize: 15, color: "#5a4a00", fontWeight: 500 }}>{s.l}</div>
               </div>
             ))}
