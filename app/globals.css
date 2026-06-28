@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   萊乾資訊官網 — 全域樣式
+   keyframes 與 hover 類別直接沿用設計稿，確保像素級還原。
+   ============================================================ */
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #FFFBEC; font-family: var(--font-noto), "Noto Sans TC", sans-serif; }
+
+@keyframes lc-floaty { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-18px) } }
+@keyframes lc-floaty2 { 0%,100% { transform: translateY(0) } 50% { transform: translateY(16px) } }
+@keyframes lc-pulse { 0%,100% { transform: scale(1) } 50% { transform: scale(1.08) } }
+@keyframes lc-rise { from { opacity:0; transform: translateY(40px) } to { opacity:1; transform: translateY(0) } }
+@keyframes lc-bubrise { 0% { transform: translateY(0) scale(1); opacity:0 } 10% { opacity:.7 } 90% { opacity:.5 } 100% { transform: translateY(-680px) scale(1.3); opacity:0 } }
+
+.lc-reveal { opacity:0; }
+.lc-reveal.lc-in { animation: lc-rise .7s cubic-bezier(.2,.7,.3,1) forwards; }
+
+.lc-link:hover { color:#9a7a00 !important; }
+.lc-btn-dark { transition: transform .18s ease, box-shadow .18s ease; }
+.lc-btn-dark:hover { transform: translateY(-3px); box-shadow:0 12px 28px rgba(26,26,26,.28) !important; }
+.lc-btn-light { transition: transform .18s ease, background .18s ease; }
+.lc-btn-light:hover { transform: translateY(-3px); background:#1A1A1A !important; color:#fff !important; }
+.lc-card { transition: transform .22s cubic-bezier(.2,.7,.3,1), box-shadow .22s ease; }
+.lc-card:hover { transform: translateY(-8px); box-shadow:0 22px 50px rgba(26,26,26,.16) !important; }
+.lc-work { transition: transform .25s cubic-bezier(.2,.7,.3,1), box-shadow .25s ease; }
+.lc-work:hover { transform: translateY(-10px); box-shadow:0 26px 60px rgba(26,26,26,.22) !important; }
+.lc-work:hover .lc-work-img { transform: scale(1.06); }
+.lc-work-img { transition: transform .5s cubic-bezier(.2,.7,.3,1); }
+.lc-step:hover .lc-step-num { background:#1A1A1A !important; color:#FFCE00 !important; transform: rotate(-8deg) scale(1.1); }
+.lc-step-num { transition: all .25s ease; }
+.lc-field:focus { outline:none; border-color:#FFCE00 !important; box-shadow:0 0 0 4px rgba(255,206,0,.25); }
+.lc-line-fab { transition: transform .2s ease; }
+.lc-line-fab:hover { transform: scale(1.12) rotate(-4deg); }
+.lc-nav-cta { transition: all .18s ease; }
+.lc-nav-cta:hover { transform: translateY(-2px); box-shadow:0 8px 20px rgba(26,26,26,.3); }
+.lc-faq-q { transition: background .18s ease; }
+.lc-faq-q:hover { background:#FFF6CF !important; }
+.lc-chip { transition: all .15s ease; }
+
+/* ============================================================
+   RWD — 設計稿為 1280px 桌機視角，以下處理平板 / 手機。
+   ============================================================ */
+
+/* 行動選單預設隱藏，桌機顯示完整 nav */
+.lc-nav-toggle { display: none; }
+
+@media (max-width: 920px) {
+  .lc-grid-3 { grid-template-columns: repeat(2, 1fr) !important; }
+  .lc-grid-5 { grid-template-columns: repeat(2, 1fr) !important; }
+  .lc-contact-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+}
+
+@media (max-width: 760px) {
+  /* Nav 收成漢堡 */
+  .lc-nav-links { display: none !important; }
+  .lc-nav-toggle { display: inline-flex !important; }
+  .lc-nav-links.lc-nav-open {
+    display: flex !important;
+    position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: #FFCE00; border-bottom: 3px solid #1A1A1A; padding: 8px 0;
+  }
+  .lc-nav-links.lc-nav-open a { padding: 13px 32px; }
+
+  .lc-hero-pad { padding: 84px 22px 96px !important; }
+  .lc-h1 { font-size: 46px !important; }
+  .lc-hero-sub { font-size: 18px !important; }
+  .lc-hero-decor { display: none !important; }
+  .lc-stats { gap: 26px !important; }
+  .lc-stat-num { font-size: 30px !important; }
+
+  .lc-h2 { font-size: 33px !important; }
+  .lc-grid-3 { grid-template-columns: 1fr !important; }
+  .lc-grid-5 { grid-template-columns: 1fr 1fr !important; }
+  .lc-sec-pad { padding: 64px 22px !important; }
+  .lc-contact-h2 { font-size: 36px !important; }
+  .lc-form-card { padding: 28px 22px !important; }
+  .lc-bubbles { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; }
+  .lc-reveal { opacity: 1 !important; }
+}
