@@ -80,7 +80,7 @@ export default function ContactForm() {
           <div style={{ width: 88, height: 88, margin: "0 auto 24px", borderRadius: "50%", background: "#FFCE00", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 44, boxShadow: "0 0 34px rgba(255,206,0,.75)", animation: "lc-pulse 1.6s ease-in-out infinite" }}>⚡</div>
           <h3 style={{ fontFamily: "var(--font-baloo), var(--font-noto), sans-serif", fontWeight: 800, fontSize: 28, color: "#1A1A1A", margin: "0 0 12px" }}>收到囉！</h3>
           <p style={{ fontSize: 16, color: "#777", lineHeight: 1.7, margin: "0 0 26px" }}>
-            謝謝你 {sentName}，我們會在一個工作天內回覆你。<br />急件歡迎直接用 LINE 找我們。
+            謝謝你 {sentName}！需求已經送達 ⚡<br />我們會在一個工作天內回信給你，先去忙別的吧。
           </p>
           <button onClick={reset} style={{ background: "#1A1A1A", color: "#FFCE00", fontWeight: 700, fontSize: 15, padding: "12px 26px", borderRadius: 999, border: "none", cursor: "pointer" }}>再填一筆</button>
         </div>
@@ -104,7 +104,7 @@ export default function ContactForm() {
                 <input className="lc-field" type="email" value={fEmail} onChange={(e) => setFEmail(e.target.value)} placeholder="you@email.com" style={fieldStyle} />
               </div>
               <div>
-                <label style={labelStyle}>電話／LINE ID</label>
+                <label style={labelStyle}>電話</label>
                 <input className="lc-field" value={fPhone} onChange={(e) => setFPhone(e.target.value)} placeholder="選填" style={fieldStyle} />
               </div>
             </div>

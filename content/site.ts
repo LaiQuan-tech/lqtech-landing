@@ -3,7 +3,6 @@ export const site = {
   name: "萊乾資訊",
   nameEn: "LaiChien Information",
   slogan: "把好點子通電上線 ⚡ 企業官網 · Web App · 品牌 UI/UX",
-  lineUrl: process.env.NEXT_PUBLIC_LINE_URL || "https://line.me/R/ti/p/@laichien",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "lqtech2026@gmail.com",
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "02-1234-5678",
   address: "台北市 · 新北市 · 全台遠端服務",

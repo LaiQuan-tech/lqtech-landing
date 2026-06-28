@@ -14,11 +14,8 @@ export default function Contact() {
             準備好讓生意<br />
             <span style={{ color: "#FFCE00" }}>通電</span>了嗎？
           </h2>
-          <p style={{ fontSize: 18, color: "#bbb", lineHeight: 1.75, margin: "0 0 34px" }}>留下你的需求，我們會在一個工作天內回覆。想更快？直接點右下角或下方的 LINE 跟我們聊。</p>
-          <a href={site.lineUrl} target="_blank" rel="noopener noreferrer" className="lc-btn-dark" style={{ display: "inline-flex", alignItems: "center", gap: 12, background: "#06C755", color: "#fff", fontWeight: 700, fontSize: 18, padding: "16px 28px", borderRadius: 999, textDecoration: "none", marginBottom: 30 }}>
-            <span style={{ width: 30, height: 30, borderRadius: 8, background: "#fff", color: "#06C755", fontWeight: 800, fontSize: 12, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-baloo), sans-serif" }}>LINE</span>
-            加 LINE 立即諮詢
-          </a>
+          <p style={{ fontSize: 18, color: "#bbb", lineHeight: 1.75, margin: "0 0 16px" }}>把你的想法、預算或時程，簡單寫在右邊的表單。一個工作天內，我們就回信跟你聊聊怎麼把它通電上線 ⚡</p>
+          <p style={{ fontSize: 16, color: "#888", lineHeight: 1.75, margin: "0 0 34px" }}>不確定要做什麼也沒關係，先把需求丟過來，免費聊。</p>
           <div style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 6 }}>
             <a href={`mailto:${site.email}`} style={{ display: "flex", alignItems: "center", gap: 12, color: "#ddd", fontSize: 16, textDecoration: "none" }}><span style={{ fontSize: 20 }}>✉️</span> {site.email}</a>
             <div style={{ display: "flex", alignItems: "center", gap: 12, color: "#ddd", fontSize: 16 }}><span style={{ fontSize: 20 }}>📍</span> {site.address}</div>

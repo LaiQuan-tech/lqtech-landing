@@ -4,7 +4,6 @@ import { useRef, useState } from "react";
 import { bubbles } from "@/content/data";
 
 // 可點擊的上升泡泡：點一下會「啵」一聲破掉，稍後從底部重新升起。
-// （不再連到 LINE；右下角浮動鈕與聯絡區的 LINE 仍可用。）
 export default function FloatingBubbles() {
   const [cycle, setCycle] = useState<number[]>(() => bubbles.map(() => 0));
   const [frozen, setFrozen] = useState<({ top: number; left: number } | null)[]>(

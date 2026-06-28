@@ -10,7 +10,6 @@ import Reviews from "@/components/Reviews";
 import Faq from "@/components/Faq";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import LineFab from "@/components/LineFab";
 
 export default function Home() {
   return (
@@ -27,7 +26,6 @@ export default function Home() {
       <Faq />
       <Contact />
       <Footer />
-      <LineFab />
     </div>
   );
 }

@@ -30,7 +30,7 @@ async function notify(form: LeadInput) {
     ["姓名", form.name],
     ["公司／品牌", form.company || "—"],
     ["Email", form.email],
-    ["電話／LINE", form.phone || "—"],
+    ["電話", form.phone || "—"],
     ["需求類型", form.needType || "未選"],
     ["專案簡述", form.message],
     ["送出時間", when],
@@ -68,7 +68,7 @@ export async function submitLead(form: LeadInput): Promise<LeadResult> {
 
   if (!supabaseAdmin) {
     // 環境變數未設定時的保護，避免直接 500。
-    return { ok: false, error: "伺服器尚未設定資料庫，請稍後再試或用 LINE 聯繫" };
+    return { ok: false, error: "伺服器尚未設定資料庫，請稍後再試，或來信 lqtech2026@gmail.com。" };
   }
 
   const clean: LeadInput = {
@@ -90,7 +90,7 @@ export async function submitLead(form: LeadInput): Promise<LeadResult> {
   });
 
   if (error) {
-    return { ok: false, error: "送出失敗，請稍後再試或用 LINE 聯繫" };
+    return { ok: false, error: "送出失敗，請稍後再試，或來信 lqtech2026@gmail.com。" };
   }
 
   // 名單已存。寄通知信為盡力而為，失敗不影響表單成功。
