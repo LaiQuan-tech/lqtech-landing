@@ -80,7 +80,6 @@ body { margin: 0; background: #FFFBEC; font-family: var(--font-noto), "Noto Sans
   .lc-sec-pad { padding: 64px 22px !important; }
   .lc-contact-h2 { font-size: 36px !important; }
   .lc-form-card { padding: 28px 22px !important; }
-  .lc-bubbles { display: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
