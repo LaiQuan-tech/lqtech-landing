@@ -133,6 +133,8 @@ body { margin: 0; background: #FFFBEC; font-family: var(--font-noto), "Noto Sans
   .lc-sec-pad { padding: 64px 22px !important; }
   .lc-contact-h2 { font-size: 36px !important; }
   .lc-form-card { padding: 28px 22px !important; }
+  /* 手機版泡泡減量：4 顆只留 2 顆（隱藏第 2、4 顆），畫面更清爽 */
+  .lc-bubbles button:nth-child(2), .lc-bubbles button:nth-child(4) { display: none !important; }
 }
 
 @media (prefers-reduced-motion: reduce) {
