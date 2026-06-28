@@ -55,6 +55,8 @@ body { margin: 0; background: #FFFBEC; font-family: var(--font-noto), "Noto Sans
 @keyframes lc-flicker { 0%,18%,22%,25%,53%,57%,100% { opacity:1 } 20%,24%,55% { opacity:.55 } }
 /* 克制版閃電：絕大多數時間全暗，僅在週期末尾短暫亮一下兩段（像遠方打雷） */
 @keyframes lc-hero-flash { 0%,86%,100% { opacity:0 } 88% { opacity:.55 } 90% { opacity:.05 } 92% { opacity:.42 } 95% { opacity:0 } }
+/* 泡泡被戳破：先微縮一下再爆開淡出 */
+@keyframes lc-pop { 0% { transform: scale(1); opacity:1 } 22% { transform: scale(.78) } 100% { transform: scale(1.85); opacity:0 } }
 
 /* 電流流動線：底層暗線 + 沿線跑的亮光帶 */
 .lc-current {
