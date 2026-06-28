@@ -56,9 +56,9 @@ export const needTypes = ["企業官網", "Web App", "品牌 UI/UX", "其他"];
 
 export const bubbles = [
   { left: "8%",  size: "60px", bg: "rgba(255,206,0,.85)",  border: "none",               icon: "⚡", fontSize: "26px", dur: "13s", delay: "0s" },
-  { left: "26%", size: "44px", bg: "rgba(6,199,85,.9)",    border: "none",               icon: "💬", fontSize: "20px", dur: "16s", delay: "3s" },
+  { left: "26%", size: "44px", bg: "rgba(255,206,0,.9)",   border: "none",               icon: "💬", fontSize: "20px", dur: "16s", delay: "3s" },
   { left: "52%", size: "72px", bg: "rgba(255,206,0,.7)",   border: "3px solid #1A1A1A",  icon: "⚡", fontSize: "30px", dur: "15s", delay: "6s" },
   { left: "70%", size: "50px", bg: "rgba(255,255,255,.9)", border: "2px solid #FFCE00",  icon: "✨", fontSize: "22px", dur: "14s", delay: "1.5s" },
-  { left: "88%", size: "56px", bg: "rgba(6,199,85,.85)",   border: "none",               icon: "💬", fontSize: "24px", dur: "17s", delay: "8s" },
+  { left: "88%", size: "56px", bg: "rgba(255,230,128,.95)", border: "2px solid #FFCE00", icon: "💬", fontSize: "24px", dur: "17s", delay: "8s" },
   { left: "40%", size: "40px", bg: "rgba(255,206,0,.8)",   border: "none",               icon: "⚡", fontSize: "18px", dur: "12s", delay: "10s" },
 ];
