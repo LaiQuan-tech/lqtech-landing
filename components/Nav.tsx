@@ -1,11 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Logo from "./Logo";
 import { navLinks, site } from "@/content/site";
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <header
@@ -13,10 +21,12 @@ export default function Nav() {
         position: "sticky",
         top: 0,
         zIndex: 70,
-        background: "rgba(255,206,0,.96)",
-        backdropFilter: "blur(6px)",
-        WebkitBackdropFilter: "blur(6px)",
+        background: scrolled ? "rgba(255,206,0,.98)" : "rgba(255,206,0,.96)",
+        backdropFilter: "blur(10px)",
+        WebkitBackdropFilter: "blur(10px)",
         borderBottom: "3px solid #1A1A1A",
+        boxShadow: scrolled ? "0 8px 24px rgba(26,26,26,.22)" : "0 0 0 rgba(0,0,0,0)",
+        transition: "box-shadow .3s ease, background .3s ease",
       }}
     >
       <div
@@ -27,7 +37,8 @@ export default function Nav() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          padding: "16px 32px",
+          padding: scrolled ? "9px 32px" : "16px 32px",
+          transition: "padding .3s ease",
         }}
       >
         <a href="#top" style={{ display: "flex", alignItems: "center", gap: 12, textDecoration: "none" }}>

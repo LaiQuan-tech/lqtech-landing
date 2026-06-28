@@ -14,7 +14,7 @@ import LineFab from "@/components/LineFab";
 
 export default function Home() {
   return (
-    <div style={{ position: "relative", overflowX: "hidden" }}>
+    <div style={{ position: "relative", overflowX: "clip" }}>
       <Reveal />
       <FloatingBubbles />
       <Nav />
