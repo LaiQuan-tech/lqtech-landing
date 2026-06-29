@@ -57,6 +57,33 @@ body { margin: 0; background: #FFFBEC; font-family: var(--font-noto), "Noto Sans
 @keyframes lc-hero-flash { 0%,86%,100% { opacity:0 } 88% { opacity:.55 } 90% { opacity:.05 } 92% { opacity:.42 } 95% { opacity:0 } }
 /* 泡泡被戳破：先微縮一下再爆開淡出 */
 @keyframes lc-pop { 0% { transform: scale(1); opacity:1 } 22% { transform: scale(.78) } 100% { transform: scale(1.85); opacity:0 } }
+/* 表單卡電流邊框：亮弧沿著四周繞圈跑 */
+@property --lc-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+@keyframes lc-spin-angle { to { --lc-angle: 360deg; } }
+
+.lc-elec-border { position: relative; }
+.lc-elec-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 3px;
+  background: conic-gradient(from var(--lc-angle),
+    rgba(255,206,0,0) 0deg,
+    rgba(255,206,0,0) 200deg,
+    rgba(255,206,0,.9) 285deg,
+    #fff 320deg,
+    rgba(255,206,0,.9) 350deg,
+    rgba(255,206,0,0) 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  filter: drop-shadow(0 0 5px rgba(255,206,0,.6));
+  animation: lc-spin-angle 4s linear infinite;
+  pointer-events: none;
+  z-index: 3;
+}
 
 /* 電流流動線：底層暗線 + 沿線跑的亮光帶 */
 .lc-current {
@@ -143,4 +170,6 @@ body { margin: 0; background: #FFFBEC; font-family: var(--font-noto), "Noto Sans
   /* 關動畫時：流動線/閃光完全隱藏，發光退化為靜態淡光，避免凍結在亮幀 */
   .lc-current, .lc-hero-flash { opacity: 0 !important; }
   .lc-zap-charge { box-shadow: 0 6px 0 #cca600 !important; }
+  /* 電流邊框退化為靜態淡黃細框 */
+  .lc-elec-border::before { background: rgba(255,206,0,.4) !important; filter: none !important; }
 }

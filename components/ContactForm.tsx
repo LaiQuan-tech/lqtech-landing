@@ -74,7 +74,7 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="lc-reveal lc-form-card" style={{ background: "#fff", borderRadius: 28, padding: "38px 36px", boxShadow: "0 20px 60px rgba(0,0,0,.4)" }}>
+    <div className="lc-reveal lc-form-card lc-elec-border" style={{ background: "#fff", borderRadius: 28, padding: "38px 36px", boxShadow: "0 20px 60px rgba(0,0,0,.4)" }}>
       {sent ? (
         <div style={{ textAlign: "center", padding: "40px 10px" }}>
           <div style={{ width: 88, height: 88, margin: "0 auto 24px", borderRadius: "50%", background: "#FFCE00", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 44, boxShadow: "0 0 34px rgba(255,206,0,.75)", animation: "lc-pulse 1.6s ease-in-out infinite" }}>⚡</div>
