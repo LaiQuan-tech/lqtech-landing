@@ -34,8 +34,8 @@ export type Work = {
 
 export const works: Work[] = [
   { emoji: "🎪", bg: "linear-gradient(135deg,#1E3A8A,#2563EB)", tag: "活動官網", title: "2026 國際扶輪年會・友誼之家", desc: "國際扶輪年會「友誼之家」展演節目官網，含節目時間表查詢與多語系。", stack: ["Next.js", "RWD", "多語系"], image: "/works/hof.jpg", url: "https://hof-umber.vercel.app/" },
-  { emoji: "🛒", bg: "linear-gradient(135deg,#FFE680,#FFCE00)", tag: "電商", title: "鮮選市集電商平台", desc: "生鮮電商，含金流、物流與會員點數系統。", stack: ["Next.js", "Stripe", "PostgreSQL"] },
-  { emoji: "🏨", bg: "linear-gradient(135deg,#FFD9A0,#FFB347)", tag: "官網", title: "礁溪溫泉會館官網", desc: "訂房導流與品牌形象，上線後詢問量翻倍。", stack: ["React", "CMS", "SEO"] },
+  { emoji: "🛋️", bg: "linear-gradient(135deg,#3a3a3a,#1A1A1A)", tag: "品牌官網", title: "KCASA 工富家飾", desc: "空間規劃與訂製傢俱品牌官網，含專案實例與線上商品。", stack: ["WordPress", "WooCommerce", "RWD"], image: "/works/kcasa.jpg", url: "https://kcasa.pro/" },
+  { emoji: "🗣️", bg: "linear-gradient(135deg,#C5E8FF,#2563EB)", tag: "教育平台", title: "聯成外語 線上語言學校", desc: "英日韓線上真人課程平台官網，含體驗預約與 AI 口說教練導流。", stack: ["WordPress", "RWD", "SEO"], image: "/works/abcgo.jpg", url: "https://www.abcgo.com.tw/" },
   { emoji: "📊", bg: "linear-gradient(135deg,#C5E8FF,#7FC4FF)", tag: "Web App", title: "業績戰情儀表板", desc: "即時銷售數據視覺化，主管決策一目了然。", stack: ["TypeScript", "D3.js", "Node"] },
   { emoji: "💪", bg: "linear-gradient(135deg,#D4F5C5,#9FE07F)", tag: "Web App", title: "健身房預約系統", desc: "教練排課、會員預約與扣點一站搞定。", stack: ["React", "Firebase", "RWD"] },
   { emoji: "🎓", bg: "linear-gradient(135deg,#E5D4FF,#B89FFF)", tag: "平台", title: "線上課程學習平台", desc: "影音課程、測驗與證書，支援萬人併發。", stack: ["Next.js", "AWS", "Video"] },
