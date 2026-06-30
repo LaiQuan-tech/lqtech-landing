@@ -21,13 +21,24 @@ export const services = [
   },
 ];
 
-export const works = [
+export type Work = {
+  emoji: string;
+  bg: string;
+  tag: string;
+  title: string;
+  desc: string;
+  stack: string[];
+  image?: string; // 真實作品截圖（放 public/works/），有則取代 emoji 佔位
+  url?: string; // 線上連結，有則整張卡可點擊開啟
+};
+
+export const works: Work[] = [
+  { emoji: "🎪", bg: "linear-gradient(135deg,#1E3A8A,#2563EB)", tag: "活動官網", title: "2026 國際扶輪年會・友誼之家", desc: "國際扶輪年會「友誼之家」展演節目官網，含節目時間表查詢與多語系。", stack: ["Next.js", "RWD", "多語系"], image: "/works/hof.jpg", url: "https://hof-umber.vercel.app/" },
   { emoji: "🛒", bg: "linear-gradient(135deg,#FFE680,#FFCE00)", tag: "電商", title: "鮮選市集電商平台", desc: "生鮮電商，含金流、物流與會員點數系統。", stack: ["Next.js", "Stripe", "PostgreSQL"] },
   { emoji: "🏨", bg: "linear-gradient(135deg,#FFD9A0,#FFB347)", tag: "官網", title: "礁溪溫泉會館官網", desc: "訂房導流與品牌形象，上線後詢問量翻倍。", stack: ["React", "CMS", "SEO"] },
   { emoji: "📊", bg: "linear-gradient(135deg,#C5E8FF,#7FC4FF)", tag: "Web App", title: "業績戰情儀表板", desc: "即時銷售數據視覺化，主管決策一目了然。", stack: ["TypeScript", "D3.js", "Node"] },
   { emoji: "💪", bg: "linear-gradient(135deg,#D4F5C5,#9FE07F)", tag: "Web App", title: "健身房預約系統", desc: "教練排課、會員預約與扣點一站搞定。", stack: ["React", "Firebase", "RWD"] },
   { emoji: "🎓", bg: "linear-gradient(135deg,#E5D4FF,#B89FFF)", tag: "平台", title: "線上課程學習平台", desc: "影音課程、測驗與證書，支援萬人併發。", stack: ["Next.js", "AWS", "Video"] },
-  { emoji: "🍰", bg: "linear-gradient(135deg,#FFD0D8,#FF9FB0)", tag: "品牌", title: "甜點品牌識別 · 官網", desc: "完整品牌視覺 + 線上訂購，質感大升級。", stack: ["Figma", "UI/UX", "Webflow"] },
 ];
 
 export const steps = [
