@@ -33,12 +33,12 @@ export type Work = {
 };
 
 export const works: Work[] = [
+  { emoji: "🏷️", bg: "linear-gradient(135deg,#3b1d5e,#7c1f3a)", tag: "App 官網", title: "PikTag 社交名片 App", desc: "「Tag yourself. Find anyone」社交 App 形象官網，雙平台下載導流與多國語系。", stack: ["Next.js", "多語系", "RWD"], image: "/works/piktag.jpg", url: "https://pikt.ag/" },
   { emoji: "🎪", bg: "linear-gradient(135deg,#1E3A8A,#2563EB)", tag: "活動官網", title: "2026 國際扶輪年會・友誼之家", desc: "國際扶輪年會「友誼之家」展演節目官網，含節目時間表查詢與多語系。", stack: ["Next.js", "RWD", "多語系"], image: "/works/hof.jpg", url: "https://hof-umber.vercel.app/" },
+  { emoji: "🥤", bg: "linear-gradient(135deg,#EAF2FB,#2563EB)", tag: "品牌電商", title: "誠真生活 RealReal", desc: "台灣純素食品品牌電商，含商品選購、會員制度與公益存款。", stack: ["Next.js", "電商", "會員系統"], image: "/works/realreal.jpg", url: "https://realreal.cc/" },
   { emoji: "🛋️", bg: "linear-gradient(135deg,#3a3a3a,#1A1A1A)", tag: "品牌官網", title: "KCASA 工富家飾", desc: "空間規劃與訂製傢俱品牌官網，含專案實例與線上商品。", stack: ["WordPress", "WooCommerce", "RWD"], image: "/works/kcasa.jpg", url: "https://kcasa.pro/" },
   { emoji: "🗣️", bg: "linear-gradient(135deg,#C5E8FF,#2563EB)", tag: "教育平台", title: "聯成外語 線上語言學校", desc: "英日韓線上真人課程平台官網，含體驗預約與 AI 口說教練導流。", stack: ["WordPress", "RWD", "SEO"], image: "/works/abcgo.jpg", url: "https://www.abcgo.com.tw/" },
-  { emoji: "📊", bg: "linear-gradient(135deg,#C5E8FF,#7FC4FF)", tag: "Web App", title: "業績戰情儀表板", desc: "即時銷售數據視覺化，主管決策一目了然。", stack: ["TypeScript", "D3.js", "Node"] },
-  { emoji: "💪", bg: "linear-gradient(135deg,#D4F5C5,#9FE07F)", tag: "Web App", title: "健身房預約系統", desc: "教練排課、會員預約與扣點一站搞定。", stack: ["React", "Firebase", "RWD"] },
-  { emoji: "🎓", bg: "linear-gradient(135deg,#E5D4FF,#B89FFF)", tag: "平台", title: "線上課程學習平台", desc: "影音課程、測驗與證書，支援萬人併發。", stack: ["Next.js", "AWS", "Video"] },
+  { emoji: "💗", bg: "linear-gradient(135deg,#FFD5E8,#FF6FA5)", tag: "品牌官網", title: "噢北鼻創意 OH BABY", desc: "數位行銷公司形象官網，主打 Podcast 廣告與品牌聲音行銷。", stack: ["React", "SEO/GEO", "RWD"], image: "/works/ohbaby.jpg", url: "https://service-237083267219.us-west1.run.app/" },
 ];
 
 export const steps = [
