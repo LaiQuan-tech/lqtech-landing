@@ -19,12 +19,12 @@ const noto = Noto_Sans_TC({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://lqtech-landing.vercel.app"),
-  title: "萊乾資訊 LaiChien｜把好點子通電上線 ⚡ 企業官網 · Web App · 品牌 UI/UX",
+  title: "萊乾資訊 LaiQuan｜把好點子通電上線 ⚡ 企業官網 · Web App · 品牌 UI/UX",
   description:
     "萊乾資訊是一間接案開發公司，替中小企業到大型團隊打造會發光的數位產品。企業形象官網、網頁應用程式、品牌設計 UI/UX，從設計到開發一條龍。",
   keywords: ["接案開發", "企業官網", "Web App", "品牌設計", "UI/UX", "網站開發", "萊乾資訊"],
   openGraph: {
-    title: "萊乾資訊 LaiChien｜把好點子通電上線 ⚡",
+    title: "萊乾資訊 LaiQuan｜把好點子通電上線 ⚡",
     description:
       "企業形象官網、網頁應用程式、品牌設計 UI/UX，從設計到開發一條龍，讓你的生意閃電起步。",
     url: "/",
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "萊乾資訊 LaiChien｜把好點子通電上線 ⚡",
+    title: "萊乾資訊 LaiQuan｜把好點子通電上線 ⚡",
     description:
       "企業形象官網、網頁應用程式、品牌設計 UI/UX，從設計到開發一條龍，讓你的生意閃電起步。",
   },

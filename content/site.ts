@@ -1,7 +1,7 @@
 // 站台基本設定。聯絡資訊優先讀環境變數，方便部署時覆寫；未設定時用示意值。
 export const site = {
   name: "萊乾資訊",
-  nameEn: "LaiChien Information",
+  nameEn: "LaiQuan Information",
   slogan: "把好點子通電上線 ⚡ 企業官網 · Web App · 品牌 UI/UX",
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "lqtech2026@gmail.com",
   phone: process.env.NEXT_PUBLIC_CONTACT_PHONE || "02-1234-5678",
