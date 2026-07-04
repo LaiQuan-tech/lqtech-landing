@@ -40,6 +40,7 @@ export const metadata: Metadata = {
       "企業形象官網、網頁應用程式、品牌設計 UI/UX，從設計到開發一條龍，讓你的生意閃電起步。",
   },
   robots: { index: true, follow: true },
+  verification: { google: "bVXPoCC1_cFv8fCGeWMWmflGy-pqnSHnjcWZvMUMB98" },
 };
 
 export const viewport: Viewport = {
