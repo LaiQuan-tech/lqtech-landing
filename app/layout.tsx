@@ -27,9 +27,16 @@ export const metadata: Metadata = {
     title: "萊乾資訊 LaiChien｜把好點子通電上線 ⚡",
     description:
       "企業形象官網、網頁應用程式、品牌設計 UI/UX，從設計到開發一條龍，讓你的生意閃電起步。",
+    url: "/",
     type: "website",
     locale: "zh_TW",
     siteName: site.name,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "萊乾資訊 LaiChien｜把好點子通電上線 ⚡",
+    description:
+      "企業形象官網、網頁應用程式、品牌設計 UI/UX，從設計到開發一條龍，讓你的生意閃電起步。",
   },
   robots: { index: true, follow: true },
 };
