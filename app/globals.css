@@ -318,3 +318,153 @@ body { margin: 0; background: #FFFBEC; font-family: var(--font-noto), "Noto Sans
     font-size: 12.5px;
   }
 }
+
+/* ── 後台進度看板（.gt-board-*；手機橫向 scroll-snap 輪播 + 案件卡）── */
+.gt-board-track {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; /* iOS 慣性捲動 */
+  overscroll-behavior-x: contain; /* 避免橫掃觸發瀏覽器上一頁 */
+  padding: 4px 2px 16px; /* 底部留白給細捲軸與卡片陰影 */
+  /* 細化捲軸 */
+  scrollbar-width: thin;
+  scrollbar-color: #c7d2e0 transparent;
+}
+.gt-board-track::-webkit-scrollbar {
+  height: 8px;
+}
+.gt-board-track::-webkit-scrollbar-thumb {
+  background: #c7d2e0;
+  border-radius: 980px;
+}
+.gt-board-track::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.gt-board-card {
+  scroll-snap-align: center;
+  flex: 0 0 auto;
+  width: min(88vw, 360px); /* 手機幾乎滿版一張、桌機並排 360px */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid rgba(20, 40, 80, 0.08);
+  border-top: 3px solid #1668c2; /* 藍點綴 */
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(20, 40, 80, 0.06);
+  padding: 20px;
+}
+.gt-board-client {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1668c2;
+  letter-spacing: 0.02em;
+}
+.gt-board-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1d1d1f;
+  line-height: 1.4;
+}
+.gt-board-progress-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: #6e6e73;
+}
+.gt-board-progress-nums {
+  font-weight: 700;
+  color: #1d1d1f;
+  font-variant-numeric: tabular-nums;
+}
+.gt-board-progress-empty {
+  color: #a1a1a6;
+}
+.gt-board-progress {
+  height: 8px;
+  background: #eef1f5;
+  border-radius: 980px;
+  overflow: hidden;
+}
+.gt-board-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1668c2, #3a8ee0);
+  border-radius: 980px;
+  transition: width 0.3s ease;
+}
+.gt-board-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.gt-board-chip {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgba(22, 104, 194, 0.35);
+  background: #f2f8fe;
+  color: #1668c2;
+  border-radius: 980px;
+  padding: 3px 11px;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.gt-board-chip:hover {
+  background: #e2effb;
+  border-color: #1668c2;
+}
+.gt-board-detail {
+  margin-top: auto; /* 推到卡片底部，多卡等高時對齊 */
+  align-self: flex-start;
+  padding-top: 4px;
+  color: #1668c2;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.gt-board-detail:hover {
+  text-decoration: underline;
+}
+.gt-board-empty {
+  background: #fff;
+  border: 1px dashed rgba(20, 40, 80, 0.16);
+  border-radius: 20px;
+  padding: 40px 24px;
+  text-align: center;
+  color: #86868b;
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+
+/* 後台導覽列（新 class；窄螢幕連結橫向捲動，桌機維持原樣）*/
+.gt-adminnav-links {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+@media (max-width: 768px) {
+  .gt-adminnav-links {
+    min-width: 0; /* 允許在 flex 列內縮小以觸發內部捲動 */
+    gap: 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox 隱藏捲軸 */
+    -ms-overflow-style: none;
+  }
+  .gt-adminnav-links::-webkit-scrollbar {
+    display: none; /* WebKit 隱藏捲軸 */
+  }
+  .gt-adminnav-links > * {
+    flex: 0 0 auto; /* 連結/登出不被壓縮，超出則整列橫捲 */
+  }
+  .gt-board-card {
+    padding: 18px;
+  }
+}

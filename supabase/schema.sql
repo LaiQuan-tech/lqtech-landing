@@ -269,3 +269,25 @@ alter table client_cases add column if not exists portal_token text unique;
 -- 生命週期 cron:最終交付請驗收提醒(單次去重)+結案後回訪信(單次去重)
 alter table deliverables add column if not exists review_reminded_at timestamptz; -- 最終交付逾期未驗收:cron 寄客人提醒一次
 alter table client_cases add column if not exists revisit_sent_at    timestamptz; -- 結案 N 天後:cron 寄客人回訪信一次
+
+-- ─────────────────────────────────────────────────────────────
+-- 後台專案管理擴充(2026-07):基礎設施連結 + 內部待辦
+-- 皆 admin-only(不進客戶 /portal);links 為 6 固定服務各 {url,note}。
+-- ─────────────────────────────────────────────────────────────
+-- 每案基礎設施連結:{"repo":{"url","note"},"vercel":{...},"supabase":{...},
+--                    "railway":{...},"ga4":{...},"search_console":{...}}
+alter table client_cases add column if not exists links jsonb not null default '{}'::jsonb;
+
+-- 內部待辦清單(只後台可見,不顯示在客戶 portal;與客戶里程碑 milestones 分離)
+create table if not exists case_tasks (
+  id          uuid primary key default gen_random_uuid(),
+  case_id     uuid not null,
+  title       text not null,
+  done        boolean not null default false,
+  sort_order  int  not null default 0,
+  done_at     timestamptz,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+create index if not exists case_tasks_case_idx on case_tasks (case_id, sort_order);
+alter table case_tasks enable row level security;  -- 無 public policy=只 service_role 可存取

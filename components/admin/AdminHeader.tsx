@@ -11,6 +11,7 @@ const NAV = [
   { href: "/admin", label: "總覽" },
   { href: "/admin/inquiries", label: "諮詢紀錄" },
   { href: "/admin/cases", label: "案件管理" },
+  { href: "/admin/board", label: "看板" },
   { href: "/admin/quotes", label: "報價單" },
   { href: "/admin/settings", label: "設定" },
 ] as const;
@@ -58,15 +59,22 @@ export default function AdminHeader() {
       {/* 左：logo + 後台標示 */}
       <Link
         href="/admin"
-        style={{ display: "flex", alignItems: "center", gap: 9, textDecoration: "none" }}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 9,
+          textDecoration: "none",
+          flexShrink: 0,
+          whiteSpace: "nowrap",
+        }}
       >
         <Logo size={26} radius={7} />
         <span style={{ fontWeight: 700, fontSize: 17, color: "#1d1d1f" }}>後台</span>
         <span style={{ fontSize: 12, color: "#86868b", letterSpacing: ".02em" }}>萊乾資訊</span>
       </Link>
 
-      {/* 中/右：導覽 + 登出 */}
-      <div style={{ display: "flex", alignItems: "center", gap: 26 }}>
+      {/* 中/右：導覽 + 登出（窄螢幕整列橫向捲動，避免擠爆破版）*/}
+      <div className="gt-adminnav-links">
         {NAV.map((item) => {
           const active = isActive(item.href);
           return (

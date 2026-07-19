@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminSupabase } from "@/lib/supabase";
-import { CASE_STATUSES, CASE_SOURCES } from "@/lib/adminCases";
+import { CASE_STATUSES, CASE_SOURCES, coerceCaseLinks } from "@/lib/adminCases";
 
 export const runtime = "nodejs";
 
@@ -102,6 +102,9 @@ export async function PATCH(req: Request) {
   if (patch.budget !== undefined) patch.budget = normalizeBudget(patch.budget);
   for (const k of NULLABLE) if (patch[k] === "") patch[k] = null;
 
+  // 基礎設施連結（jsonb）：整包替換，用 coerceCaseLinks 消毒（只留 6 服務、各 {url,note} string ≤500）。
+  if (body.links !== undefined) patch.links = coerceCaseLinks(body.links);
+
   if (Object.keys(patch).length === 0) {
     return NextResponse.json({ ok: false, error: "nothing_to_update" }, { status: 422 });
   }
@@ -146,6 +149,7 @@ export async function DELETE(req: Request) {
     await supabase.from("deliverables").delete().eq("case_id", id);
     await supabase.from("case_updates").delete().eq("case_id", id);
     await supabase.from("milestones").delete().eq("case_id", id);
+    await supabase.from("case_tasks").delete().eq("case_id", id);
   } catch (err) {
     console.error("[admin/cases] 附屬資料清除失敗（仍繼續刪案件）:", err);
   }

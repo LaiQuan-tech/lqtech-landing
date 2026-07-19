@@ -1,6 +1,9 @@
+import Link from "next/link";
 import AdminHeader from "@/components/admin/AdminHeader";
 import CaseTable from "@/components/admin/CaseTable";
 import { getCases } from "@/lib/adminCases";
+
+const BRAND_BLUE = "#1668c2";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -40,7 +43,34 @@ export default async function CasesPage({
     <>
       <AdminHeader />
       <main className="gt-admin-shell">
-        <h1 style={{ fontSize: 28, fontWeight: 700, color: "#1d1d1f", margin: "0 0 22px" }}>案件管理</h1>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: 12,
+            flexWrap: "wrap",
+            margin: "0 0 22px",
+          }}
+        >
+          <h1 style={{ fontSize: 28, fontWeight: 700, color: "#1d1d1f", margin: 0 }}>案件管理</h1>
+          <Link
+            href="/admin/board"
+            style={{
+              border: `1px solid ${BRAND_BLUE}`,
+              background: "#fff",
+              color: BRAND_BLUE,
+              borderRadius: 980,
+              padding: "8px 16px",
+              fontSize: 14,
+              fontWeight: 600,
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            📋 看板檢視
+          </Link>
+        </div>
         <CaseTable cases={cases} prefill={prefill} />
       </main>
     </>

@@ -7,11 +7,14 @@ import CaseActions from "@/components/admin/CaseActions";
 import MilestonePanel from "@/components/admin/MilestonePanel";
 import DeliverablePanel from "@/components/admin/DeliverablePanel";
 import UpdatesPanel from "@/components/admin/UpdatesPanel";
+import InfraLinksPanel from "@/components/admin/InfraLinksPanel";
+import TaskChecklistPanel from "@/components/admin/TaskChecklistPanel";
 import { getCase, SOURCE_LABELS } from "@/lib/adminCases";
 import { getQuote, getQuoteIdBySession, type Quote } from "@/lib/quote";
 import { getContract, getContractByQuoteId, type Contract } from "@/lib/contract";
 import { getPaymentsByCase, getPaymentsByQuote, type Payment } from "@/lib/payment";
 import { listMilestones, listUpdates, listDeliverables, ensurePortalToken } from "@/lib/portal";
+import { listCaseTasks } from "@/lib/caseTasks";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -58,11 +61,12 @@ export default async function AdminCaseDetailPage({ params }: { params: { id: st
     .sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
   // ── P1 客戶專案入口：里程碑／動態／交付物（後台含 draft）＋ portal token（lazy 產生）──
-  const [milestones, updates, deliverables, portalToken] = await Promise.all([
+  const [milestones, updates, deliverables, portalToken, tasks] = await Promise.all([
     listMilestones(caseRow.id),
     listUpdates(caseRow.id),
     listDeliverables(caseRow.id, { includeDraft: true }),
     ensurePortalToken(caseRow.id),
+    listCaseTasks(caseRow.id),
   ]);
 
   return (
@@ -123,6 +127,10 @@ export default async function AdminCaseDetailPage({ params }: { params: { id: st
               </div>
             )}
           </div>
+
+          {/* 後台專案管理：基礎設施連結 ＋ 內部待辦（admin-only，不進客戶 portal） */}
+          <InfraLinksPanel caseId={caseRow.id} links={caseRow.links} />
+          <TaskChecklistPanel caseId={caseRow.id} tasks={tasks} />
 
           {/* 金流 timeline：報價 → 合約 → 請款 */}
           <CaseTimeline quote={quote} contract={contract} payments={payments} />
