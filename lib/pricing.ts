@@ -12,14 +12,15 @@ export type RateItem = {
   note?: string;
 };
 
-/** 內建預設價目（萊乾資訊暫定價，後台「系統設定」可改）。DB `rate_card` 缺漏或壞資料時的 fallback。 */
+/** 內建預設價目（沿用 gather 價目表，後台「系統設定」可改）。DB `rate_card` 缺漏或壞資料時的 fallback。 */
 export const DEFAULT_RATE_CARD: RateItem[] = [
-  { key: "corporate_site", name: "企業形象官網建置", unit: "式", price: 60000, note: "RWD、5–8 頁、基本 SEO，約 3–5 週" },
-  { key: "webapp_mvp", name: "Web App 開發（MVP）", unit: "式", price: 250000, note: "中型應用約 6–12 週，含需求規劃" },
-  { key: "webapp_module", name: "Web App 功能模組擴充", unit: "式", price: 60000, note: "既有系統加功能，依模組估" },
-  { key: "brand_uiux", name: "品牌設計 UI/UX", unit: "式", price: 80000, note: "Logo/VI/介面設計整套" },
-  { key: "uiux_page", name: "介面設計（單頁）", unit: "頁", price: 8000, note: "" },
-  { key: "hosting_maintenance", name: "網站代管與維護", unit: "年", price: 18000, note: "主機、資安、備份、更新" },
+  { key: "brand_site", name: "品牌形象官網建置", unit: "式", price: 30000, note: "RWD、約 5–8 頁、基本 SEO" },
+  { key: "ecommerce_site", name: "電商網站建置", unit: "式", price: 50000, note: "商品/購物車/會員系統；總價已內含金流物流與電子發票串接" },
+  { key: "ai_crm", name: "AI CRM 系統客製化開發", unit: "式", price: 300000, note: "會員/客戶管理 + AI 分析與自動化" },
+  { key: "payment_logistics", name: "金流／物流串接", unit: "式", price: 20000, note: "電商網站建置已內含此項；僅在單獨串接（未做整站）時才計價" },
+  { key: "einvoice", name: "電子發票串接", unit: "式", price: 15000, note: "電商網站建置已內含此項；僅在單獨串接（未做整站）時才計價" },
+  { key: "blog_cms", name: "部落格／內容管理系統", unit: "式", price: 10000 },
+  { key: "hosting_maintenance", name: "網站代管與維護", unit: "年", price: 12600, note: "伺服器、資安、備份、效能" },
 ];
 
 export const CURRENCY = "TWD";
