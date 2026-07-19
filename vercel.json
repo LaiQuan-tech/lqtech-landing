@@ -1,5 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "regions": ["hnd1"]
+  "regions": ["hnd1"],
+  "crons": [
+    {
+      "path": "/api/cron/quote-followup",
+      "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/cron/lifecycle",
+      "schedule": "30 1 * * *"
+    }
+  ]
 }

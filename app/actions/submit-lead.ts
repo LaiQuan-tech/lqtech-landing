@@ -1,6 +1,6 @@
 "use server";
 
-import { supabaseAdmin } from "@/lib/supabase/server";
+import { supabaseAdmin } from "@/lib/supabase";
 import { sendEmail } from "@/lib/email";
 
 export type LeadInput = {

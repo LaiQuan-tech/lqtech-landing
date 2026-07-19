@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Baloo_2, Noto_Sans_TC } from "next/font/google";
 import { site } from "@/content/site";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
+import ChatWidget from "@/components/ai/ChatWidget";
 import "./globals.css";
+import "./token-pages.css";
 
 const baloo = Baloo_2({
   subsets: ["latin"],
@@ -55,6 +57,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className={`${baloo.variable} ${noto.variable}`}>
         {children}
         <GoogleAnalytics />
+        <ChatWidget />
       </body>
     </html>
   );
