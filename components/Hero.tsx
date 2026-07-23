@@ -53,7 +53,7 @@ export default function Hero() {
             {[
               { n: "50+", l: "完成專案" },
               { n: "98%", l: "客戶回購率" },
-              { n: "6 年", l: "開發經驗" },
+              { n: "12 年", l: "開發經驗" },
             ].map((s, i) => (
               <div key={s.l}>
                 <div className="lc-stat-num lc-charge-text" style={{ fontFamily: "var(--font-baloo), sans-serif", fontWeight: 800, fontSize: 38, color: "#1A1A1A", animationDelay: `${i * 0.9}s` }}>{s.n}</div>
