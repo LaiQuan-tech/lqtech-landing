@@ -37,7 +37,7 @@ export async function POST(req: Request) {
   try {
     const reply = await callGeminiChat(turns, {
       system: chatSystem(rateCardText(await getRateCard())),
-      maxTokens: 600,
+      maxTokens: 1200,
     });
     // 記錄整段對話 + 萃取聯絡資訊（後台諮詢紀錄用）。
     // 這裡 await：serverless 對「回應後才跑的非同步工作」不保證跑完，
