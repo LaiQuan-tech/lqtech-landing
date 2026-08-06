@@ -38,7 +38,32 @@ export async function rateLimit(ip: string): Promise<boolean> {
 export class RateLimitError extends Error {}
 export class GeminiError extends Error {}
 
-/** 呼叫 Gemini（關閉 thinking 以免吃掉輸出預算）。回傳純文字。 */
+// 壓低 thinking，避免思考佔用 maxOutputTokens 造成空回覆。
+// ⚠️ 這個參數的形狀 Google 改過：gemini-3.5 起不再接受舊的 { thinkingBudget: 0 }
+// （2026-08 起一律回 400 INVALID_ARGUMENT，曾導致整個 AI 客服掛掉）。
+// 因此 postGemini() 對 400 會自動移除 thinkingConfig 重試一次，日後再變也不會全掛。
+const THINKING = { thinkingLevel: "low" } as const;
+
+/** 送出請求；若 400 疑似 thinkingConfig 不被接受，移除該設定重試一次。 */
+async function postGemini(key: string, body: Record<string, unknown>): Promise<Response> {
+  const send = (b: Record<string, unknown>) =>
+    fetch(`${ENDPOINT}?key=${key}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(b),
+    });
+
+  const res = await send(body);
+  if (res.status !== 400) return res;
+
+  const gc = body.generationConfig as Record<string, unknown> | undefined;
+  if (!gc || !("thinkingConfig" in gc)) return res;
+  const { thinkingConfig: _dropped, ...gcWithoutThinking } = gc;
+  console.warn("[gemini] thinkingConfig 被拒（400），移除後重試");
+  return send({ ...body, generationConfig: gcWithoutThinking });
+}
+
+/** 呼叫 Gemini（壓低 thinking 以免吃掉輸出預算）。回傳純文字。 */
 export async function callGemini(prompt: string, opts: GeminiOpts = {}): Promise<string> {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new GeminiError("gemini_not_configured");
@@ -48,18 +73,14 @@ export async function callGemini(prompt: string, opts: GeminiOpts = {}): Promise
     generationConfig: {
       temperature: opts.temperature ?? 0.7,
       maxOutputTokens: opts.maxTokens ?? 800,
-      thinkingConfig: { thinkingBudget: 0 },
+      thinkingConfig: THINKING,
     },
   };
   if (opts.system) {
     body.systemInstruction = { parts: [{ text: opts.system }] };
   }
 
-  const res = await fetch(`${ENDPOINT}?key=${key}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  const res = await postGemini(key, body);
 
   if (res.status === 429) throw new RateLimitError("quota");
   if (!res.ok) throw new GeminiError(`http_${res.status}`);
@@ -84,16 +105,12 @@ export async function callGeminiChat(turns: ChatTurn[], opts: GeminiOpts = {}): 
     generationConfig: {
       temperature: opts.temperature ?? 0.6,
       maxOutputTokens: opts.maxTokens ?? 600,
-      thinkingConfig: { thinkingBudget: 0 },
+      thinkingConfig: THINKING,
     },
   };
   if (opts.system) body.systemInstruction = { parts: [{ text: opts.system }] };
 
-  const res = await fetch(`${ENDPOINT}?key=${key}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  const res = await postGemini(key, body);
   if (res.status === 429) throw new RateLimitError("quota");
   if (!res.ok) throw new GeminiError(`http_${res.status}`);
   const data = (await res.json()) as {
@@ -117,7 +134,7 @@ export async function callGeminiJSON<T = unknown>(
     generationConfig: {
       temperature: 0.1,
       maxOutputTokens: opts.maxTokens ?? 400,
-      thinkingConfig: { thinkingBudget: 0 },
+      thinkingConfig: THINKING,
       responseMimeType: "application/json",
       responseSchema: opts.schema,
     },
@@ -125,11 +142,7 @@ export async function callGeminiJSON<T = unknown>(
   if (opts.system) body.systemInstruction = { parts: [{ text: opts.system }] };
 
   try {
-    const res = await fetch(`${ENDPOINT}?key=${key}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+    const res = await postGemini(key, body);
     if (!res.ok) return null;
     const data = (await res.json()) as {
       candidates?: Array<{ content?: { parts?: Array<{ text?: string }> } }>;
