@@ -10,7 +10,8 @@ export type GithubProgressStatus =
   | "no_repo" // 案件沒填 repo 連結 → 完全不打 API
   | "invalid_url" // repo 連結無法解析成 owner/repo
   | "not_found" // /repos 回 404（不存在、已刪除、或 token 無權限而看不到）
-  | "no_access" // 401/403
+  | "no_access" // 401/403 且不是配額問題 → 真的沒權限
+  | "rate_limited" // 403/429 且 x-ratelimit-remaining 為 0 → 只是被限流，稍後會自己好
   | "empty_repo" // repo 存在但沒有任何 commit
   | "no_token" // 未設定 GITHUB_TOKEN → 完全不打 API
   | "error"; // 連線／解析失敗
@@ -65,6 +66,7 @@ const STATUSES: GithubProgressStatus[] = [
   "invalid_url",
   "not_found",
   "no_access",
+  "rate_limited",
   "empty_repo",
   "no_token",
   "error",
@@ -172,6 +174,7 @@ export const STATUS_MESSAGES: Record<GithubProgressStatus, string> = {
   invalid_url: "Repo 連結格式無法辨識，請填成 https://github.com/擁有者/專案名。",
   not_found: "找不到這個 repo —— 可能已刪除、更名，或 token 沒有它的權限（跨 org 的 repo 讀不到）。",
   no_access: "沒有權限讀取這個 repo，請確認 GITHUB_TOKEN 的授權範圍。",
+  rate_limited: "GitHub API 配額暫時用完了，稍後會自動重試（不用改設定）。",
   empty_repo: "這個 repo 還沒有任何 commit。",
   no_token: "尚未設定 GITHUB_TOKEN，無法讀取 GitHub 進度。",
   error: "讀取 GitHub 時發生問題，稍後會自動重試。",

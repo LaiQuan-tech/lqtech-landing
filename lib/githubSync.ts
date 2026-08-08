@@ -1,7 +1,7 @@
 import { createAdminSupabase } from "@/lib/supabase";
 import { coerceCaseLinks } from "@/lib/adminCases";
 import { fetchRepoProgress, githubConfigured, rateLimitRemaining } from "@/lib/github";
-import type { GithubProgress } from "@/lib/githubProgress";
+import { STATUS_MESSAGES, type GithubProgress } from "@/lib/githubProgress";
 
 // 把每案 repo 的開發進度抓下來寫進 client_cases.github_progress。
 // 後台頁一律只讀這個 snapshot，render 期間不打 GitHub。
@@ -40,14 +40,15 @@ export async function syncCaseGithub(caseId: string): Promise<SyncOutcome> {
   const terminal = TERMINAL.includes(progress.status);
   const now = new Date().toISOString();
 
-  // 暫時性失敗（error）：不覆寫既有 snapshot，只記錯誤，保留舊時間戳讓 UI 顯示「資料已過期」。
+  // 暫時性失敗（error / rate_limited / no_token）：不覆寫既有 snapshot，只記錯誤，
+  // 保留舊時間戳讓 UI 顯示「資料已過期」，下一輪 cron 會重試。
   const patch: Record<string, unknown> = terminal
     ? {
         github_progress: progress,
         github_synced_at: now,
         github_sync_error: null,
       }
-    : { github_sync_error: "讀取 GitHub 失敗，稍後會自動重試" };
+    : { github_sync_error: STATUS_MESSAGES[progress.status] || "讀取 GitHub 失敗，稍後會自動重試" };
 
   // 刻意不動 updated_at：同步是背景動作，不該讓案件跳到列表最上面。
   const { error: upErr } = await supabase.from("client_cases").update(patch).eq("id", caseId);

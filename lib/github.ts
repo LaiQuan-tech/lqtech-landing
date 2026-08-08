@@ -380,7 +380,13 @@ export async function fetchRepoProgress(
   const metaRes = await ghFetch(`/repos/${owner}/${repo}`);
   if (!metaRes) return emptyProgress("error", owner, repo);
   if (metaRes.res.status === 404) return emptyProgress("not_found", owner, repo);
-  if (metaRes.res.status === 401 || metaRes.res.status === 403) return emptyProgress("no_access", owner, repo);
+  if (metaRes.res.status === 401 || metaRes.res.status === 403 || metaRes.res.status === 429) {
+    // GitHub 對「沒權限」與「被限流」都回 403，只有 x-ratelimit-remaining 分得出來。
+    // 報錯訊息差很多（一個要你改 token 授權、一個只要等），不能混在一起。
+    const remaining = rateLimitRemaining(metaRes.res);
+    const limited = metaRes.res.status === 429 || remaining === 0;
+    return emptyProgress(limited ? "rate_limited" : "no_access", owner, repo);
+  }
   if (!metaRes.res.ok) {
     console.error("[github] repo meta 失敗:", owner, repo, metaRes.res.status, metaRes.text.slice(0, 300));
     return emptyProgress("error", owner, repo);
