@@ -46,6 +46,7 @@ export default function CaseFormModal({ open, initial, onClose, onSaved }: Props
     initial?.budget != null ? String(initial.budget) : ""
   );
   const [notes, setNotes] = useState(initial?.notes ?? "");
+  const [repoUrl, setRepoUrl] = useState(initial?.links?.repo?.url ?? "");
   const sessionId = initial?.session_id ?? null; // 隱藏帶入
 
   const [submitting, setSubmitting] = useState(false);
@@ -81,6 +82,17 @@ export default function CaseFormModal({ open, initial, onClose, onSaved }: Props
       session_id: sessionId,
     };
     if (editingId) payload.id = editingId;
+
+    // links 在 API 端是「整包替換」，只送 {repo} 會把 vercel/supabase/railway/ga4/search_console
+    // 五個連結一次清空。一律送合併後的完整物件，並保留 repo 原本的備註。
+    const trimmedRepo = repoUrl.trim();
+    const existingLinks = initial?.links ?? {};
+    if (trimmedRepo || existingLinks.repo) {
+      payload.links = {
+        ...existingLinks,
+        repo: { url: trimmedRepo, note: existingLinks.repo?.note ?? "" },
+      };
+    }
 
     setSubmitting(true);
     try {
@@ -242,6 +254,20 @@ export default function CaseFormModal({ open, initial, onClose, onSaved }: Props
                 placeholder="選填，如 120000"
               />
             </div>
+          </div>
+
+          <div>
+            <label style={labelStyle}>GitHub Repo</label>
+            <input
+              value={repoUrl}
+              onChange={(e) => setRepoUrl(e.target.value)}
+              type="url"
+              style={fieldStyle}
+              placeholder="選填，如 https://github.com/LaiQuan-tech/專案名"
+            />
+            <p style={{ margin: "6px 2px 0", fontSize: 12, color: "#86868b" }}>
+              填了之後後台會自動讀這個 repo 的開發進度（其餘服務連結請到案件詳情頁的「基礎設施連結」設定）。
+            </p>
           </div>
 
           <div>

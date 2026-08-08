@@ -9,6 +9,7 @@ import DeliverablePanel from "@/components/admin/DeliverablePanel";
 import UpdatesPanel from "@/components/admin/UpdatesPanel";
 import InfraLinksPanel from "@/components/admin/InfraLinksPanel";
 import TaskChecklistPanel from "@/components/admin/TaskChecklistPanel";
+import GithubProgressPanel from "@/components/admin/GithubProgressPanel";
 import { getCase, SOURCE_LABELS } from "@/lib/adminCases";
 import { getQuote, getQuoteIdBySession, type Quote } from "@/lib/quote";
 import { getContract, getContractByQuoteId, type Contract } from "@/lib/contract";
@@ -128,8 +129,16 @@ export default async function AdminCaseDetailPage({ params }: { params: { id: st
             )}
           </div>
 
-          {/* 後台專案管理：基礎設施連結 ＋ 內部待辦（admin-only，不進客戶 portal） */}
+          {/* 後台專案管理：基礎設施連結 ＋ GitHub 進度 ＋ 內部待辦（admin-only，不進客戶 portal） */}
           <InfraLinksPanel caseId={caseRow.id} links={caseRow.links} />
+          {/* GitHub 進度是唯讀鏡像（讀 snapshot，render 期間不打 GitHub）；下面的內部待辦仍是手動勾，兩者並存 */}
+          <GithubProgressPanel
+            caseId={caseRow.id}
+            repoUrl={caseRow.links.repo?.url ?? ""}
+            progress={caseRow.github_progress}
+            syncedAt={caseRow.github_synced_at}
+            syncError={caseRow.github_sync_error}
+          />
           <TaskChecklistPanel caseId={caseRow.id} tasks={tasks} />
 
           {/* 金流 timeline：報價 → 合約 → 請款 */}

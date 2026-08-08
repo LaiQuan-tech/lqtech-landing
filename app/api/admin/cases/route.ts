@@ -55,6 +55,9 @@ export async function POST(req: Request) {
     currency: body.currency ? String(body.currency) : "TWD",
     notes: body.notes ? String(body.notes) : null,
     session_id: body.session_id ? String(body.session_id) : null,
+    // 建案時就能填基礎設施連結（主要是 GitHub Repo，填了才抓得到開發進度）。
+    // 缺這行的話線下案子得先存檔、再進詳情頁補一次。
+    links: coerceCaseLinks(body.links),
   };
 
   const { data, error } = await supabase.from("client_cases").insert(row).select("id").single();

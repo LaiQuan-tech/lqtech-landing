@@ -28,6 +28,30 @@ npm run dev                  # http://localhost:3000
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | anon key（前端） |
 | `SUPABASE_SERVICE_ROLE_KEY` | service_role key，**僅伺服器端**，勿加 `NEXT_PUBLIC_` 前綴 |
 | `NEXT_PUBLIC_LINE_URL` / `_CONTACT_EMAIL` / `_CONTACT_PHONE` | 站台聯絡資訊 |
+| `ADMIN_PASSWORD` / `ADMIN_SESSION_SECRET` | 後台登入密碼與 session 簽章金鑰 |
+| `CRON_SECRET` | cron 端點的 Bearer 授權 |
+| `GEMINI_API_KEY` | AI 客服／報價 |
+| `PCHOMEPAY_*` | 金流憑證與付款方式 |
+| `GITHUB_TOKEN` | 讀每案 repo 的開發進度；fine-grained PAT，Contents + Metadata 唯讀 |
+
+## GitHub 開發進度
+
+後台案件詳情頁會顯示該案 repo 的開發進度（百分比、分組、最近 commit）。
+repo 位置取自案件的「基礎設施連結 → GitHub Repo」，進度來源優先序：
+根目錄 `PROGRESS.md` → `docs/plans/` 挑檔 → 只有 commit 活動。
+格式規範見 [docs/PROGRESS-format.md](docs/PROGRESS-format.md)，本專案自己的進度在 [PROGRESS.md](PROGRESS.md)。
+
+同步時機：`/api/cron/lifecycle` 每天跑時順帶更新（過期門檻 `GITHUB_SYNC_HOURS`，預設 20 小時），
+或在案件詳情頁按「重新同步」。**後台頁只讀 DB 快照，render 期間不打 GitHub。**
+
+驗證解析結果（不需登入後台）：
+
+```bash
+curl -H "Authorization: Bearer $CRON_SECRET" \
+  "https://laiquan.co/api/cron/github-probe?repo=LaiQuan-tech/aster"
+```
+
+加 `&path=docs/plans/P1-progress.md` 可指定檔案、`&anon=1` 可在沒有 token 時讀公開 repo。
 
 ## 結構
 
@@ -41,7 +65,11 @@ design_handoff_laichien_site/  原始設計交接稿（參考）
 
 ## 資料庫 schema
 
-`leads` 資料表（已建於 Supabase；schema 見 `design_handoff_laichien_site/DEPLOYMENT.md` §4.2）。
+`supabase/schema.sql` 是權威來源（含後續的 `alter table … add column if not exists`），
+在 Supabase SQL Editor 執行即可；`leads` 資料表另見 `design_handoff_laichien_site/DEPLOYMENT.md` §4.2。
+
+⚠️ 部署與 migration 不保證同時發生。`lib/adminCases.ts` 對 `github_*` 三欄有降級查詢：
+欄位還沒建時後台照常運作、進度顯示「尚未同步」，跑完 alter table 後自動恢復。
 
 ## 上線前待辦
 

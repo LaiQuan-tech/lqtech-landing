@@ -291,3 +291,13 @@ create table if not exists case_tasks (
 );
 create index if not exists case_tasks_case_idx on case_tasks (case_id, sort_order);
 alter table case_tasks enable row level security;  -- 無 public policy=只 service_role 可存取
+
+-- ─────────────────────────────────────────────────────────────
+-- GitHub 開發進度(2026-08):每案 repo 的進度快照
+-- 進度來源=repo 根目錄 PROGRESS.md 或 docs/plans/ 的勾選清單,外加 commit 活動。
+-- 後台頁只讀這個 snapshot,render 期間不打 GitHub;由 lifecycle cron 與手動同步寫入。
+-- repo 位置沿用既有的 links->repo->>url,不另開欄位。
+-- ─────────────────────────────────────────────────────────────
+alter table client_cases add column if not exists github_progress  jsonb not null default '{}'::jsonb;
+alter table client_cases add column if not exists github_synced_at timestamptz;  -- 只有抵達終局狀態才寫
+alter table client_cases add column if not exists github_sync_error text;        -- 暫時性失敗留訊息,保留舊 snapshot

@@ -26,6 +26,13 @@ export default function CaseBoard({ cases }: Props) {
         const total = c.taskTotal ?? 0;
         const done = c.taskDone ?? 0;
         const pct = total > 0 ? Math.max(0, Math.min(100, Math.round((done / total) * 100))) : 0;
+        const gh = c.github_progress;
+        const idleText =
+          gh?.idleDays === null || gh?.idleDays === undefined
+            ? ""
+            : gh.idleDays === 0
+              ? "今天"
+              : `${gh.idleDays} 天前`;
 
         return (
           <article key={c.id} className="gt-board-card">
@@ -38,9 +45,9 @@ export default function CaseBoard({ cases }: Props) {
               <StatusSelect id={c.id} value={c.status} />
             </div>
 
-            {/* 內部待辦進度 */}
+            {/* 內部待辦進度（藍） */}
             <div className="gt-board-progress-head">
-              <span>進度</span>
+              <span>內部待辦</span>
               {total > 0 ? (
                 <span className="gt-board-progress-nums">
                   {done}/{total}（{pct}%）
@@ -60,6 +67,36 @@ export default function CaseBoard({ cases }: Props) {
               >
                 <div className="gt-board-progress-fill" style={{ width: `${pct}%` }} />
               </div>
+            )}
+
+            {/* GitHub 開發進度（綠）：讀 snapshot，沒 repo／沒進度檔就不畫條 */}
+            {gh && gh.status === "ok" && (
+              <>
+                <div className="gt-board-progress-head">
+                  <span>GitHub</span>
+                  {gh.total > 0 ? (
+                    <span className="gt-board-progress-nums">
+                      {gh.done}/{gh.total}（{gh.pct}%）{idleText && `・${idleText}`}
+                    </span>
+                  ) : (
+                    <span className="gt-board-progress-empty">
+                      {idleText ? `僅 commit・${idleText}` : "無進度檔"}
+                    </span>
+                  )}
+                </div>
+                {gh.total > 0 && (
+                  <div
+                    className="gt-board-progress"
+                    role="progressbar"
+                    aria-label="GitHub 開發進度"
+                    aria-valuenow={gh.pct}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                  >
+                    <div className="gt-board-progress-fill gt-board-progress-fill-gh" style={{ width: `${gh.pct}%` }} />
+                  </div>
+                )}
+              </>
             )}
 
             {/* 基礎設施連結 chips（僅顯示有 url 的服務）*/}

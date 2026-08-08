@@ -8,6 +8,7 @@ import {
   sendRevisitEmail,
 } from "@/lib/resend";
 import { getCase } from "@/lib/adminCases";
+import { syncAllCasesGithub } from "@/lib/githubSync";
 import { ensurePortalToken } from "@/lib/portal";
 import type { Contract } from "@/lib/contract";
 import type { Payment } from "@/lib/payment";
@@ -17,7 +18,9 @@ import type { Payment } from "@/lib/payment";
 // 2) 請款單建立逾 N 天仍未付、未提醒過 → 寄一次付款提醒，成功才記 reminded_at。
 // 3) 最終交付逾 N 天仍未驗收、未提醒過 → 寄一次「請驗收」提醒給客人，成功才記 review_reminded_at。
 // 4) 案件結案逾 M 天、未回訪過 → 寄一次回訪信給客人，成功才記 revisit_sent_at。
-// N = env LIFECYCLE_FOLLOWUP_DAYS（預設 3）；M = env REVISIT_DAYS（預設 30）。
+// 5) 有 repo 連結、且從未同步或已過期的案件 → 抓一次 GitHub 開發進度寫進 github_progress。
+// N = env LIFECYCLE_FOLLOWUP_DAYS（預設 3）；M = env REVISIT_DAYS（預設 30）；
+// GitHub 過期門檻 = env GITHUB_SYNC_HOURS（預設 20）。
 // 一律「只有真的寄出去才寫時間戳」——暫時性失敗（含缺 email）留待明天重試。
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -47,6 +50,7 @@ export async function GET(req: NextRequest) {
   let paymentsReminded = 0;
   let reviewsReminded = 0;
   let revisitsSent = 0;
+  let githubSynced = 0;
 
   try {
     const rawDays = Number(process.env.LIFECYCLE_FOLLOWUP_DAYS);
@@ -149,11 +153,33 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({ ok: true, contractsReminded, paymentsReminded, reviewsReminded, revisitsSent });
+    // ── 5) GitHub 開發進度同步（掛在這支 cron 之下，不另開第三支以免撞到方案的 cron 數量上限）──
+    // 只挑有填 repo 連結、且從未同步或已過期（GITHUB_SYNC_HOURS，預設 20h）的案件。
+    // 未設 GITHUB_TOKEN 時 syncAllCasesGithub 直接回 stopped:"no_token"，不影響前四步。
+    const gh = await syncAllCasesGithub({ limit: 25 });
+    githubSynced = gh.synced;
+    if (gh.stopped) console.warn("[cron/lifecycle] GitHub 同步提前結束:", gh.stopped);
+
+    return NextResponse.json({
+      ok: true,
+      contractsReminded,
+      paymentsReminded,
+      reviewsReminded,
+      revisitsSent,
+      githubSynced,
+    });
   } catch (err) {
     console.error("[cron/lifecycle] failed:", err);
     return NextResponse.json(
-      { ok: false, error: "cron_failed", contractsReminded, paymentsReminded, reviewsReminded, revisitsSent },
+      {
+        ok: false,
+        error: "cron_failed",
+        contractsReminded,
+        paymentsReminded,
+        reviewsReminded,
+        revisitsSent,
+        githubSynced,
+      },
       { status: 500 }
     );
   }

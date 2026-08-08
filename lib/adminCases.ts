@@ -1,17 +1,19 @@
 import { createAdminSupabase } from "@/lib/supabase";
+import { coerceGithubProgress, type GithubProgress } from "@/lib/githubProgress";
 
 /** 案件狀態（app 端 allowlist；DB 存 text）。 */
 export const CASE_STATUSES = ["洽談中", "報價中", "進行中", "已完成", "已結案", "擱置"] as const;
 export type CaseStatus = (typeof CASE_STATUSES)[number];
 
-/** 案件來源。 */
-export const CASE_SOURCES = ["line", "ai_chat", "referral", "manual"] as const;
+/** 案件來源。API 的白名單（route.ts 的 SOURCE_SET）由此衍生，加來源改這裡即可。 */
+export const CASE_SOURCES = ["line", "ai_chat", "referral", "offline", "manual"] as const;
 export type CaseSource = (typeof CASE_SOURCES)[number];
 
 export const SOURCE_LABELS: Record<string, string> = {
   line: "LINE",
   ai_chat: "AI 客服",
   referral: "轉介紹",
+  offline: "線下接洽",
   manual: "手動新增",
 };
 
@@ -68,6 +70,10 @@ export type ClientCase = {
   auto_opened: boolean;
   // 後台專案管理擴充（admin-only，不進客戶 portal）：基礎設施連結
   links: CaseLinks;
+  // GitHub 開發進度快照（由 cron／手動同步寫入；後台只讀，render 期間不打 GitHub）
+  github_progress: GithubProgress | null;
+  github_synced_at: string | null;
+  github_sync_error: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -75,8 +81,46 @@ export type ClientCase = {
 /** 看板卡片：案件 ＋ 內部待辦完成度聚合（taskDone／taskTotal）。 */
 export type BoardCase = ClientCase & { taskDone: number; taskTotal: number };
 
-const SELECT_COLS =
+const BASE_COLS =
   "id, title, client_name, contact_email, contact_phone, contact_line, source, status, budget, currency, notes, session_id, quote_id, contract_id, deposit_paid_at, final_paid_at, closed_at, auto_opened, links, created_at, updated_at";
+const GITHUB_COLS = "github_progress, github_synced_at, github_sync_error";
+const SELECT_COLS = `${BASE_COLS}, ${GITHUB_COLS}`;
+
+/**
+ * GitHub 欄位是否已存在於 DB。
+ *
+ * 這三欄由 supabase/schema.sql 的 alter table 加上，但程式部署與 migration 不保證同時發生
+ * （本專案沒有 staging，DDL 由人在 Supabase 主控台執行）。若欄位還沒建，帶著它們的 select
+ * 會整個查詢失敗 → 後台案件頁會變成空的。因此第一次遇到「欄位不存在」就記住並降級，
+ * 之後只查 BASE_COLS，github_* 一律回 null（UI 顯示「尚未同步」）。
+ * 一旦 migration 跑完、下一次冷啟動就會恢復完整查詢。
+ */
+let githubColsMissing = false;
+
+/** PostgREST 的 undefined_column 是 42703。 */
+function isMissingColumn(err: { code?: string; message?: string } | null): boolean {
+  if (!err) return false;
+  return err.code === "42703" || /column .* does not exist/i.test(err.message ?? "");
+}
+
+function selectCols(): string {
+  return githubColsMissing ? BASE_COLS : SELECT_COLS;
+}
+
+/**
+ * DB 讀回的原始列 → ClientCase：jsonb 欄位一律過 coerce，防止任意形狀污染型別。
+ * 降級查詢（github_* 欄位還沒建）時這三欄會是 undefined，一律補成 null 讓型別成立。
+ */
+function normalizeCase(row: ClientCase): ClientCase {
+  const raw = row as unknown as Record<string, unknown>;
+  return {
+    ...row,
+    links: coerceCaseLinks(raw.links),
+    github_progress: coerceGithubProgress(raw.github_progress),
+    github_synced_at: typeof raw.github_synced_at === "string" ? raw.github_synced_at : null,
+    github_sync_error: typeof raw.github_sync_error === "string" ? raw.github_sync_error : null,
+  };
+}
 
 /**
  * 把任意 jsonb 的 links 正規化成 CaseLinks：只留 6 個已知服務、各自 {url,note} 皆 string、
@@ -103,15 +147,16 @@ export async function getCases(): Promise<ClientCase[]> {
   const supabase = createAdminSupabase();
   if (!supabase) return [];
   try {
-    const { data, error } = await supabase
-      .from("client_cases")
-      .select(SELECT_COLS)
-      .order("updated_at", { ascending: false });
+    const run = (cols: string) =>
+      supabase.from("client_cases").select(cols).order("updated_at", { ascending: false });
+    let { data, error } = await run(selectCols());
+    if (isMissingColumn(error)) {
+      githubColsMissing = true;
+      console.warn("[adminCases] github_* 欄位尚未建立，降級查詢（請執行 supabase/schema.sql 的 alter table）");
+      ({ data, error } = await run(BASE_COLS));
+    }
     if (error || !data) return [];
-    return (data as ClientCase[]).map((c) => ({
-      ...c,
-      links: coerceCaseLinks((c as { links?: unknown }).links),
-    }));
+    return (data as unknown as ClientCase[]).map(normalizeCase);
   } catch {
     return [];
   }
@@ -122,14 +167,14 @@ export async function getCase(id: string): Promise<ClientCase | null> {
   const supabase = createAdminSupabase();
   if (!supabase) return null;
   try {
-    const { data, error } = await supabase
-      .from("client_cases")
-      .select(SELECT_COLS)
-      .eq("id", id)
-      .maybeSingle();
+    const run = (cols: string) => supabase.from("client_cases").select(cols).eq("id", id).maybeSingle();
+    let { data, error } = await run(selectCols());
+    if (isMissingColumn(error)) {
+      githubColsMissing = true;
+      ({ data, error } = await run(BASE_COLS));
+    }
     if (error || !data) return null;
-    const row = data as ClientCase;
-    return { ...row, links: coerceCaseLinks((row as { links?: unknown }).links) };
+    return normalizeCase(data as unknown as ClientCase);
   } catch {
     return null;
   }
@@ -143,10 +188,13 @@ export async function getCasesForBoard(): Promise<BoardCase[]> {
   const supabase = createAdminSupabase();
   if (!supabase) return [];
   try {
-    const { data: cases, error } = await supabase
-      .from("client_cases")
-      .select(SELECT_COLS)
-      .order("updated_at", { ascending: false });
+    const run = (cols: string) =>
+      supabase.from("client_cases").select(cols).order("updated_at", { ascending: false });
+    let { data: cases, error } = await run(selectCols());
+    if (isMissingColumn(error)) {
+      githubColsMissing = true;
+      ({ data: cases, error } = await run(BASE_COLS));
+    }
     if (error || !cases) return [];
 
     const { data: tasks } = await supabase.from("case_tasks").select("case_id, done");
@@ -158,14 +206,9 @@ export async function getCasesForBoard(): Promise<BoardCase[]> {
       agg.set(t.case_id, cur);
     }
 
-    return (cases as ClientCase[]).map((c) => {
+    return (cases as unknown as ClientCase[]).map((c) => {
       const a = agg.get(c.id) ?? { done: 0, total: 0 };
-      return {
-        ...c,
-        links: coerceCaseLinks((c as { links?: unknown }).links),
-        taskDone: a.done,
-        taskTotal: a.total,
-      };
+      return { ...normalizeCase(c), taskDone: a.done, taskTotal: a.total };
     });
   } catch {
     return [];

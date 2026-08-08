@@ -8,6 +8,8 @@ import StatusSelect from "./StatusSelect";
 import CaseFormModal from "./CaseFormModal";
 
 const BRAND_BLUE = "#1668c2";
+// GitHub 進度用綠色，與內部待辦的藍色區隔（同 GithubProgressPanel / 看板）
+const GH_GREEN = "#1f7a44";
 
 type Prefill = {
   title: string;
@@ -36,6 +38,30 @@ function formatDateTime(iso: string): string {
 function formatBudget(c: ClientCase): string {
   if (c.budget == null) return "—";
   return `${c.currency ?? "TWD"} ${c.budget.toLocaleString("en-US")}`;
+}
+
+/**
+ * GitHub 開發進度欄：有百分比就顯示百分比＋幾天沒動，只有 commit 活動就顯示天數，沒 repo 顯示 —。
+ * 只讀 github_progress snapshot（後台不會在 render 期間打 GitHub）。
+ */
+function renderGithubProgress(c: ClientCase) {
+  const p = c.github_progress;
+  if (!p || p.status !== "ok") {
+    return <span style={{ color: "#c7c7cc" }}>—</span>;
+  }
+  const idleText = p.idleDays === null ? "" : p.idleDays === 0 ? "今天" : `${p.idleDays} 天前`;
+  if (p.total === 0) {
+    return <span style={{ color: "#86868b", fontSize: 13 }}>{idleText ? `commit ${idleText}` : "—"}</span>;
+  }
+  return (
+    <span style={{ display: "inline-flex", alignItems: "baseline", gap: 6 }}>
+      <span style={{ color: GH_GREEN, fontWeight: 600 }}>{p.pct}%</span>
+      <span style={{ color: "#a1a1a6", fontSize: 12 }}>
+        {p.done}／{p.total}
+        {idleText ? `・${idleText}` : ""}
+      </span>
+    </span>
+  );
 }
 
 /** 案件表格 + 新增/編輯 Modal。帶 prefill（從諮詢紀錄轉來）時自動開啟新增。 */
@@ -107,6 +133,7 @@ export default function CaseTable({ cases, prefill }: Props) {
                 <th>來源</th>
                 <th>狀態</th>
                 <th>預算</th>
+                <th>開發進度</th>
                 <th>更新</th>
                 <th>操作</th>
               </tr>
@@ -114,7 +141,7 @@ export default function CaseTable({ cases, prefill }: Props) {
             <tbody>
               {cases.length === 0 ? (
                 <tr>
-                  <td colSpan={7} style={{ color: "#86868b", padding: "28px 14px", textAlign: "center" }}>
+                  <td colSpan={8} style={{ color: "#86868b", padding: "28px 14px", textAlign: "center" }}>
                     還沒有案件，點右上角「新增案件」開始，或到「諮詢紀錄」把一段對話轉成案件。
                   </td>
                 </tr>
@@ -128,6 +155,7 @@ export default function CaseTable({ cases, prefill }: Props) {
                       <StatusSelect id={c.id} value={c.status} />
                     </td>
                     <td style={{ color: "#6e6e73", whiteSpace: "nowrap" }}>{formatBudget(c)}</td>
+                    <td style={{ whiteSpace: "nowrap" }}>{renderGithubProgress(c)}</td>
                     <td style={{ color: "#86868b", whiteSpace: "nowrap" }}>{formatDateTime(c.updated_at)}</td>
                     <td>
                       <span style={{ display: "inline-flex", gap: 8 }}>

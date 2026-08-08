@@ -410,6 +410,10 @@ body { margin: 0; background: #FFFBEC; font-family: var(--font-noto), "Noto Sans
   border-radius: 980px;
   transition: width 0.3s ease;
 }
+/* GitHub 開發進度用綠色，與上面藍色的內部待辦區隔（兩條並存時顏色是唯一的快速區分）*/
+.gt-board-progress-fill-gh {
+  background: linear-gradient(90deg, #1f7a44, #35a163);
+}
 .gt-board-chips {
   display: flex;
   flex-wrap: wrap;
