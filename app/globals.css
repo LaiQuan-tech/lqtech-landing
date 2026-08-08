@@ -209,8 +209,16 @@ body { margin: 0; background: #FFFBEC; font-family: var(--font-noto), "Noto Sans
 .gt-admin-shell {
   max-width: 1080px;
   margin: 0 auto;
-  /* top padding 清開固定 header（54px）*/
+  /* 窄螢幕：導覽在頂部，top padding 清開固定 header（54px）*/
   padding: 84px 6vw 60px;
+}
+/* 桌機：導覽是左側欄，內容整列右移讓開側欄寬度（--gt-admin-sidebar-w）*/
+@media (min-width: 769px) {
+  .gt-admin-shell {
+    max-width: 1180px;
+    margin: 0 0 0 var(--gt-admin-sidebar-w);
+    padding: 40px clamp(24px, 3vw, 44px) 64px;
+  }
 }
 .gt-admin-card {
   background: #fff;
@@ -224,10 +232,15 @@ body { margin: 0; background: #FFFBEC; font-family: var(--font-noto), "Noto Sans
   text-decoration: none;
   color: #1d1d1f;
   opacity: 0.72;
-  transition: opacity 0.2s ease, color 0.2s ease;
+  transition: opacity 0.2s ease, color 0.2s ease, background 0.2s ease;
 }
 .gt-admin-navlink:hover {
   opacity: 1;
+}
+.gt-admin-navlink.is-active {
+  opacity: 1;
+  color: #1668c2;
+  font-weight: 700;
 }
 /* 表格：橫向可捲動容器 + 表身 */
 .gt-admin-table-wrap {
@@ -443,13 +456,106 @@ body { margin: 0; background: #FFFBEC; font-family: var(--font-noto), "Noto Sans
   line-height: 1.7;
 }
 
-/* 後台導覽列（新 class；窄螢幕連結橫向捲動，桌機維持原樣）*/
+/* ── 後台導覽（.gt-adminnav-*）──
+   桌機 ≥769px：左側固定側欄；窄螢幕 ≤768px：頂部固定橫列、連結橫向捲動。
+   側欄寬度改這裡，.gt-admin-shell 的讓位會跟著變。 */
+:root {
+  --gt-admin-sidebar-w: 216px;
+}
+.gt-adminnav {
+  position: fixed;
+  z-index: 50;
+  display: flex;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+.gt-adminnav-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  text-decoration: none;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.gt-adminnav-brand-title {
+  font-weight: 700;
+  font-size: 17px;
+  color: #1d1d1f;
+}
+.gt-adminnav-brand-sub {
+  font-size: 12px;
+  color: #86868b;
+  letter-spacing: 0.02em;
+}
 .gt-adminnav-links {
   display: flex;
   align-items: center;
   gap: 26px;
 }
+.gt-adminnav-logout {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #6e6e73;
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 980px;
+  padding: 6px 15px;
+  cursor: pointer;
+}
+.gt-adminnav-logout:disabled {
+  cursor: default;
+  opacity: 0.5;
+}
+
+/* 桌機：左側固定側欄 */
+@media (min-width: 769px) {
+  .gt-adminnav {
+    inset: 0 auto 0 0; /* 貼左、撐滿高度 */
+    width: var(--gt-admin-sidebar-w);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 26px;
+    padding: 18px 14px 20px;
+    border-right: 1px solid rgba(0, 0, 0, 0.07);
+  }
+  .gt-adminnav-brand {
+    padding: 0 8px;
+  }
+  .gt-adminnav-links {
+    flex: 1; /* 撐滿剩餘高度，登出鈕才能用 margin-top:auto 貼底 */
+    min-height: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    overflow-y: auto;
+  }
+  .gt-admin-navlink {
+    padding: 9px 12px;
+    border-radius: 10px;
+  }
+  .gt-admin-navlink:hover {
+    background: rgba(0, 0, 0, 0.045);
+  }
+  .gt-admin-navlink.is-active {
+    background: rgba(22, 104, 194, 0.09);
+  }
+  .gt-adminnav-logout {
+    margin-top: auto;
+    width: 100%;
+  }
+}
+
+/* 窄螢幕：維持原本的頂部橫列 */
 @media (max-width: 768px) {
+  .gt-adminnav {
+    inset: 0 0 auto 0;
+    height: 54px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6vw;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+  }
   .gt-adminnav-links {
     min-width: 0; /* 允許在 flex 列內縮小以觸發內部捲動 */
     gap: 16px;

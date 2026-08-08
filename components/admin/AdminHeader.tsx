@@ -5,8 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import Logo from "@/components/Logo";
 
-const BRAND_BLUE = "#1668c2";
-
 const NAV = [
   { href: "/admin", label: "總覽" },
   { href: "/admin/inquiries", label: "諮詢紀錄" },
@@ -16,7 +14,12 @@ const NAV = [
   { href: "/admin/settings", label: "設定" },
 ] as const;
 
-/** 後台固定導覽列（沿用 SiteHeader 視覺；當前頁加粗變藍）。 */
+/**
+ * 後台固定導覽（當前頁加粗變藍）。
+ * 版面全部走 CSS（globals.css 的 .gt-adminnav-*），因為要用 media query 切兩種形態：
+ *   桌機 ≥769px → 左側固定側欄；窄螢幕 ≤768px → 頂部橫列、連結可橫捲。
+ * 內容區的讓位由 .gt-admin-shell 對應處理，改側欄寬度要同步改該處。
+ */
 export default function AdminHeader() {
   const pathname = usePathname();
   const router = useRouter();
@@ -39,41 +42,15 @@ export default function AdminHeader() {
   }
 
   return (
-    <nav
-      className="gt-nav"
-      style={{
-        position: "fixed",
-        inset: "0 0 auto 0",
-        zIndex: 50,
-        height: 54,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 6vw",
-        background: "rgba(255,255,255,.82)",
-        backdropFilter: "saturate(180%) blur(20px)",
-        WebkitBackdropFilter: "saturate(180%) blur(20px)",
-        borderBottom: "1px solid rgba(0,0,0,.07)",
-      }}
-    >
-      {/* 左：logo + 後台標示 */}
-      <Link
-        href="/admin"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: 9,
-          textDecoration: "none",
-          flexShrink: 0,
-          whiteSpace: "nowrap",
-        }}
-      >
+    <nav className="gt-adminnav">
+      {/* 頂（桌機）／左（手機）：logo + 後台標示 */}
+      <Link href="/admin" className="gt-adminnav-brand">
         <Logo size={26} radius={7} />
-        <span style={{ fontWeight: 700, fontSize: 17, color: "#1d1d1f" }}>後台</span>
-        <span style={{ fontSize: 12, color: "#86868b", letterSpacing: ".02em" }}>萊乾資訊</span>
+        <span className="gt-adminnav-brand-title">後台</span>
+        <span className="gt-adminnav-brand-sub">萊乾資訊</span>
       </Link>
 
-      {/* 中/右：導覽 + 登出（窄螢幕整列橫向捲動，避免擠爆破版）*/}
+      {/* 導覽 + 登出（登出在桌機貼側欄底部、窄螢幕跟著連結橫捲）*/}
       <div className="gt-adminnav-links">
         {NAV.map((item) => {
           const active = isActive(item.href);
@@ -81,28 +58,14 @@ export default function AdminHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="gt-admin-navlink"
-              style={active ? { opacity: 1, color: BRAND_BLUE, fontWeight: 700 } : undefined}
+              className={active ? "gt-admin-navlink is-active" : "gt-admin-navlink"}
+              aria-current={active ? "page" : undefined}
             >
               {item.label}
             </Link>
           );
         })}
-        <button
-          onClick={logout}
-          disabled={loggingOut}
-          style={{
-            fontSize: 13.5,
-            fontWeight: 500,
-            color: "#6e6e73",
-            background: "transparent",
-            border: "1px solid rgba(0,0,0,.14)",
-            borderRadius: 980,
-            padding: "6px 15px",
-            cursor: loggingOut ? "default" : "pointer",
-            opacity: loggingOut ? 0.5 : 1,
-          }}
-        >
+        <button onClick={logout} disabled={loggingOut} className="gt-adminnav-logout">
           登出
         </button>
       </div>
